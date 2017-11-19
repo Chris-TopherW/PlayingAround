@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2017
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "usingExternalCpp", "usingExternalCpp.csproj", "{65DD65F6-F1A2-6A77-2A45-5C6A00CD4897}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{65DD65F6-F1A2-6A77-2A45-5C6A00CD4897}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{65DD65F6-F1A2-6A77-2A45-5C6A00CD4897}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{65DD65F6-F1A2-6A77-2A45-5C6A00CD4897}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{65DD65F6-F1A2-6A77-2A45-5C6A00CD4897}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
