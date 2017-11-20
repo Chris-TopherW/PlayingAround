@@ -13,19 +13,21 @@ namespace cwMidi
         protected byte[] readFile;
         private List<MidiTrack> midiTracks;
 
-        private ushort bpm = 0;
-        private ushort trackType = 0;
-        private ushort numTracks = 0;
+        private int bpm = 0;
+        private int trackType = 0;
+        private int numTracks = 0;
+        private int trackPosOffset = 0;
 
         public MidiFile(UnityEngine.TextAsset p_file)
         {
             readFile = p_file.bytes;
             midiTracks = new List<MidiTrack>();
-            ushort readPos = headerSize; // start from pos 14 in midi array- after header
+            int readPos = headerSize; // start from pos 14 in midi array- after header
 
             setMidiType(readFile[9]);
             setNumTracks(readFile[11]);
 
+            trackPosOffset = headerSize;
             for(int i = 0; i < getNumTracks(); i++)
             {
                 readPos += 4; // 4 bytes for first half of track header
@@ -33,7 +35,7 @@ namespace cwMidi
             }
         }
 
-        private ushort readTrack(ushort p_readPos)
+        private int readTrack(int p_readPos)
         {
             byte[] trackSizeRaw = new byte[4];
             for(int i = 0; i < 4; i++)
@@ -43,7 +45,8 @@ namespace cwMidi
             }
             if (BitConverter.IsLittleEndian)
                 Array.Reverse(trackSizeRaw);
-            ushort trackSize = BitConverter.ToUInt16(trackSizeRaw, 0);
+            trackPosOffset += 8; //offset for track header- timestamp and mtrk
+            int trackSize = BitConverter.ToUInt16(trackSizeRaw, 0); //this is track size not including header or ender...
 
             MidiTrack track = new MidiTrack();
 
@@ -51,9 +54,9 @@ namespace cwMidi
             bool canUseRunningStatus = false;
             //add all notes here. 4 is num bytes in track end message.
             
-            while (p_readPos < (trackSize + headerSize + 8))
+            while (p_readPos < (trackSize + trackPosOffset))
             {
-                while(p_readPos + 2 < (trackSize + headerSize + 8))
+                while(p_readPos + 2 < (trackSize + trackPosOffset))
                 {
                     if (readFile[p_readPos] == 0x00 && readFile[p_readPos + 1] == 0xff)
                     {
@@ -130,7 +133,7 @@ namespace cwMidi
                     else break;
                 }
                 
-                if(p_readPos < (trackSize + headerSize + 8))
+                if(p_readPos < (trackSize + trackPosOffset))
                 {
                     List<byte> rawMessage = new List<byte>();
                     int numBytesTimestamp = 1;
@@ -169,10 +172,10 @@ namespace cwMidi
 
                     MidiMessage mes = new MidiMessage(rawMessage.ToArray(), numBytesTimestamp);
                     track.AddNote(mes);
-                }
-                    
+                }  
             }
             addTrack(track);
+            trackPosOffset += trackSize;
             return p_readPos;
         }
        
@@ -227,6 +230,7 @@ namespace cwMidi
             //int i = 0;
             foreach (MidiTrack mTrk in midiTracks)
             {
+                UnityEngine.Debug.Log("Num messages = " + mTrk.getNumNotes());
                 foreach (MidiMessage mes in mTrk.getMessages())
                 {
                     mes.print();

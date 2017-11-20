@@ -19,8 +19,8 @@ namespace cwMidi
         {
             double theTime = AudioSettings.dspTime;
 
-            PortMidi.playNote(p_message.getByteOne(), p_message.getByteTwo(), 
-                             (int)((p_time - theTime) * 1000.0), 100);
+            PortMidi.midiEvent(p_message.getStatusByte(), p_message.getByteOne(), p_message.getByteTwo(), 
+                             (int)((p_time - theTime) * 1000.0));
             previousEventMS = (p_time - theTime) * 1000.0;
         }
 
@@ -29,8 +29,8 @@ namespace cwMidi
         {
             int ppqTime = p_message.getTimeStamp();
             double msOffset = Metronome.ppqToMs(ppqTime);
-            PortMidi.playNote(p_message.getByteOne(), p_message.getByteTwo(),
-                             (int)(previousEventMS + msOffset), 100); //this is wrong logic- will work for midi file but nothing else...
+            PortMidi.midiEvent(p_message.getStatusByte(), p_message.getByteOne(), p_message.getByteTwo(),
+                             (int)(previousEventMS + msOffset)); //this is wrong logic- will work for midi file but nothing else...
             previousEventMS = previousEventMS + msOffset; //set for next note
         }
 

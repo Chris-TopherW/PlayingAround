@@ -23,8 +23,8 @@ public class PlaySomeMidi : MonoBehaviour {
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            playRandomNotePhrase();
-            //playFile();
+            //playRandomNotePhrase();
+            playFile();
             //MidiMessage mes = new MidiMessage(0x90, (byte)(60 + Random.Range(0, 12)), 100);
             //mes.setTimestamp(0);
             //MidiPlayer.PlayScheduled(mes);
@@ -61,8 +61,7 @@ public class PlaySomeMidi : MonoBehaviour {
             for (int i = 0; i < midiFile.getMidiTrack(tracks).getNumNotes(); i++)
             {
                 MidiMessage mes = midiFile.getMidiTrack(tracks).getNote(i);
-                if(mes.getMidiEvent() == 0x90);
-                    MidiPlayer.PlayScheduled(mes);
+                MidiPlayer.PlayScheduled(mes);
             }
         }
     }

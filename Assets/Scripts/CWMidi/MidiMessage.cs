@@ -30,6 +30,7 @@ namespace cwMidi
                 timeStampRaw[i] = messageAsBytes[i];
             }
             timeStamp = midiHexTimeToNormalTime(timeStampRaw);
+            status = messageAsBytes[p_bytesInTimeStamp];
             midiEvent = messageAsBytes[p_bytesInTimeStamp] & 0xF0;
             channel = messageAsBytes[p_bytesInTimeStamp] & 0x0F;
             controlByte1 = messageAsBytes[p_bytesInTimeStamp + 1];

@@ -27,6 +27,11 @@ namespace cwMidi
                 trackHeader[i] = trkLenBytes[i - 4];
         }
 
+        public MidiTrack(byte[] rawData)
+        {
+            ;
+        }
+
         public void AddNote(MidiMessage p_message)
         {
             trackMessages.Add(p_message);
