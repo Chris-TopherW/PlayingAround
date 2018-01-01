@@ -65,7 +65,6 @@ namespace cwMidi
             byte[] headerSize = { 0x00, 0x00, 0x00, 0x06 };
             for (int i = 0; i < headerSize.Length; i++)
                 headerFile[i + MThd.Length] = headerSize[i];
-
             setBpm(120);
         }
 
@@ -78,18 +77,18 @@ namespace cwMidi
         public void setMidiType(int p_midiType)
         {
             if (p_midiType > 1) return; //put error catch here
-            //midiType = (ushort)p_midiType;
             midiType = (ushort)p_midiType;
             headerFile[9] = (byte)midiType;
         }
+
         public void setNumTracks(int p_numTracks)
         {
             if (p_numTracks > 1) setMidiType(1);
             if (p_numTracks > 0xFF) return; //catch error oi
             numTracks = (ushort)p_numTracks;
-            //headerFile[11] = (byte)numTracks;
             int i = 0;
         }
+
         public void setBpm(int p_bpm)
         {
             //if (p_bpm > 0xFFFF) return; //CATCH OVERFLOW?

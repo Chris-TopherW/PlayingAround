@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System;
 
@@ -7,16 +6,14 @@ namespace cwMidi
 {
     public class MidiFile : MidiHeader
     {
-        Dictionary<byte[], string> MessType;
-
         protected List<byte> midiByteArray;
         protected byte[] readFile;
-        private List<MidiTrack> midiTracks;
+        protected List<MidiTrack> midiTracks;
 
-        private int bpm = 0;
-        private int trackType = 0;
-        private int numTracks = 0;
-        private int trackPosOffset = 0;
+        protected int bpm = 0;
+        protected int trackType = 0;
+        protected int numTracks = 0;
+        protected int trackPosOffset = 0;
 
         public MidiFile(UnityEngine.TextAsset p_file)
         {
@@ -35,8 +32,9 @@ namespace cwMidi
             }
         }
 
-        private int readTrack(int p_readPos)
+        protected int readTrack(int p_readPos)
         {
+            int currentTrack = midiTracks.Count;
             byte[] trackSizeRaw = new byte[4];
             for(int i = 0; i < 4; i++)
             {
@@ -171,9 +169,11 @@ namespace cwMidi
                     }
 
                     MidiMessage mes = new MidiMessage(rawMessage.ToArray(), numBytesTimestamp);
+                    mes.setOwnerTrack(track);
                     track.AddNote(mes);
                 }  
             }
+            track.setTrackNum(midiTracks.Count); //0 referenced
             addTrack(track);
             trackPosOffset += trackSize;
             return p_readPos;
@@ -227,7 +227,6 @@ namespace cwMidi
             UnityEngine.Debug.Log("BPM: " + getBpm());
             UnityEngine.Debug.Log("midiType: " + getMidiType());
             UnityEngine.Debug.Log("numTracks: " + getNumTracks());
-            //int i = 0;
             foreach (MidiTrack mTrk in midiTracks)
             {
                 UnityEngine.Debug.Log("Num messages = " + mTrk.getNumNotes());

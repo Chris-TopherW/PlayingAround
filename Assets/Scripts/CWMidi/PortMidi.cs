@@ -25,9 +25,6 @@ namespace cwMidi
         [DllImport("portmidi", EntryPoint = "midiEvent")]
         public static extern void midiEvent(int status, int mess1, int mess2, int delay);
 
-        [DllImport("portmidi", EntryPoint = "printOutputDevices")]
-        public static extern string printOutputDevices();
-
         [DllImport("portmidi", EntryPoint = "shutdown")]
         public static extern void shutdown();
     }

@@ -8,10 +8,6 @@ namespace cwMidi
     public static class Midi
     {
 
-        //enum MessType { noteData, sequenceNum, textEvent, copyrightMes, trackName,
-        //                instName, lyrics, textMarker, cuePoint, midiChannelPrefix,
-        //                endOfTrack, setTempo, SMPTEOffset, timeSignature };
-
         public static Dictionary<int, string> MessType = new Dictionary<int, string>()
         {
             { 0x0002 , "sequenceNum" },
@@ -62,4 +58,3 @@ namespace cwMidi
         }
     }
 }
-

@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System;
 
 namespace cwMidi
@@ -13,6 +12,9 @@ namespace cwMidi
         private byte[] trkLenBytes = { 0x00, 0x00, 0x00, 0x00 };
         private ushort trkLen;
         private readonly byte[] trkEndMes = { 0x00, 0xFF, 0x2F, 0x00 };
+        private long trackPPQLen = 0;
+        public long trackPPQAbsolutePos = 0;
+        private int trackNum = -1;
 
         private List<MidiMessage> trackMessages = new List<MidiMessage>();
         private int numNotes = 0;
@@ -20,21 +22,18 @@ namespace cwMidi
         public MidiTrack()
         {
             trackHeader = new byte[headerLen];
-
             for(int i = 0; i < 4; i++)
                 trackHeader[i] = trkStartMes[i];
             for (int i = 4; i < 8; i++)
                 trackHeader[i] = trkLenBytes[i - 4];
         }
 
-        public MidiTrack(byte[] rawData)
-        {
-            ;
-        }
-
         public void AddNote(MidiMessage p_message)
         {
             trackMessages.Add(p_message);
+            if (p_message == null) UnityEngine.Debug.Log("Message is NULL");
+            p_message.setOwnerTrack(this);
+            trackPPQLen += p_message.getTimeStamp();
             numNotes++;
             UInt16 numBytesInMes = p_message.getNumBytes();
             trkLen += numBytesInMes;
@@ -68,10 +67,7 @@ namespace cwMidi
             numNotes = 0;
         }
 
-        public List<MidiMessage> getMessages()
-        {
-            return trackMessages;
-        }
+        public List<MidiMessage> getMessages() { return trackMessages; }
 
         public byte[] toByteArray()
         {
@@ -100,16 +96,15 @@ namespace cwMidi
         {
             if (p_index >= numNotes)
             {
-                UnityEngine.Debug.Log("Error: getNote(arg) must be lower than numNotes - 1");
+                UnityEngine.Debug.Log("<color=red>Error: getNote(arg) must be lower than numNotes - 1</color>");
                 return null;
             }   
             else
                 return trackMessages[p_index];
         }
-        public int getNumNotes()
-        {
-            return numNotes;
-        }
+        public int getNumNotes() { return numNotes; }
+        public int getTrackNum() { return trackNum; }
+        public long getTrackPPQReadPos() { return trackPPQAbsolutePos; }
+        public void setTrackNum(int p_trackNum) { trackNum = p_trackNum; }
     }
 }
-
