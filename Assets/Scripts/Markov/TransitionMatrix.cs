@@ -21,11 +21,15 @@ namespace cwMarkov
             nodeMatrix.Add(startNode);
             previousReadNode = nodeMatrix[0];
             previousWritePos = 0; //pos 0 in array- ie start of phrase
+            for(int i = 0; i < sortedTrack.notesWithLengths.Count; i++)
+            {
+                addNote(sortedTrack.notesWithLengths[i]);
+            }
         }
         //each node- check it doesn't exist already
         public void addNote(MarkovNote p_mes)
         {
-            //Debug.Log("Add note : " + p_mes.getByteOne());
+            if(Midi.debugLevel > 1) Debug.Log("Add note : " + p_mes.getByteOne());
             for (int i = 0; i < nodeMatrix.Count; i++)
             {
                 if (p_mes.getMessageAsBytes().SequenceEqual(nodeMatrix[i].getMessageAsBytes()) && p_mes.length == nodeMatrix[i].getNoteLen())

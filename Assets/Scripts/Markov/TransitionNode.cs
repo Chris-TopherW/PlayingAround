@@ -49,16 +49,19 @@ namespace cwMarkov
             int accumulator = 0;
             for (int i = 0; i < transitionWeights.Count; i++)
             {
-                Debug.Log("Number of possible transitions: " + transitionWeights.Count
-                    + "\t\tNum Weights to chose from: " + allTransitionsWeight + "\nrand num : " + randomPos);
+                if(Midi.debugLevel > 2)
+                    Debug.Log("Number of possible transitions: " + transitionWeights.Count
+                        + "\t\tNum Weights to chose from: " + allTransitionsWeight + "\nrand num : " + randomPos);
 
                 for (int j = 0; j < transitionWeights[i].weight; j++)
                 {
-                    Debug.Log("<color=green>transitionWeights[" + i + "].weight = " + transitionWeights[i].weight
+                    if (Midi.debugLevel > 2)
+                        Debug.Log("<color=green>transitionWeights[" + i + "].weight = " + transitionWeights[i].weight
                         + "\nMidi mess is : " + transitionWeights[i].node.message.getByteOne().ToString("X") + "</color>");
                     if (randomPos == j + accumulator)
                     {
-                        UnityEngine.Debug.Log(
+                        if (Midi.debugLevel > 2)
+                            UnityEngine.Debug.Log(
                             "<color=blue>Event = " + transitionWeights[i].node.message.getStatusByte().ToString("X") + "\ncontrol byte 1 = " +
                             transitionWeights[i].node.message.getByteOne().ToString("X") + "\t\tcontrol byte 2 = "
                             + transitionWeights[i].node.message.getByteTwo().ToString("X") + "</color>");
@@ -73,7 +76,7 @@ namespace cwMarkov
         }
 
         public byte[] getMessageAsBytes() { return message.getMessageAsBytes(); }
-        public int getNoteLen() { return message.length; }
+        public long getNoteLen() { return message.length; }
     }
 
     public class TransitionWeight

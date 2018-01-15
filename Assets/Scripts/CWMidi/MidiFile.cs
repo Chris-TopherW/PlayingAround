@@ -17,6 +17,7 @@ namespace cwMidi
 
         public MidiFile(UnityEngine.TextAsset p_file)
         {
+            if (Midi.debugLevel > 2) UnityEngine.Debug.Log("Create midi track");
             readFile = p_file.bytes;
             midiTracks = new List<MidiTrack>();
             int readPos = headerSize; // start from pos 14 in midi array- after header

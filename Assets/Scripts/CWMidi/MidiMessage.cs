@@ -4,13 +4,13 @@ namespace cwMidi
 {
     public class MidiMessage
     {
-        public long absolutePPQTime = 0;
 
         protected byte[] messageAsBytes;
         protected UInt16 numBytes = 0;
         protected int bytesInTimeStamp;
         protected int PPQDivision = 960;
-        protected int timeStamp = 0;
+        protected int timeStamp = -1;
+        protected long absoluteTimeStamp = -1;
         protected int status = 0;
         protected int midiEvent = 0;
         protected int channel = 0;
@@ -62,12 +62,14 @@ namespace cwMidi
 
         public byte[] toByteArray() { return messageAsBytes; }
         public void setTimestamp(int p_timestamp) { timeStamp = p_timestamp; }
+        public void setAbsTimestamp(long p_timestamp) { absoluteTimeStamp = p_timestamp; }
         public void setOwnerTrack(MidiTrack p_owner) { ownerTrack = p_owner; }
         public byte[] getMessageAsBytes() { return messageAsBytes; }
         public ushort getNumBytes() { return (ushort)messageAsBytes.Length; }
         public int getByteOne() { return controlByte1; }
         public int getByteTwo() { return controlByte2; }
         public int getTimeStamp() { return timeStamp; }
+        public long getAbsTimeStamp() { return absoluteTimeStamp; }
         public int getPPQ() { return PPQDivision; }
         public int getStatusByte() { return status;  }
         public int getMidiEvent() { return midiEvent; }

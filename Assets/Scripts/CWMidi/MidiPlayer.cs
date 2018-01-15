@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace cwMidi
@@ -9,16 +8,22 @@ namespace cwMidi
         private static double metronomeStartTime = 0.0;
         public static int deviceNum = 0;
         private static double previousEventMS = 0.0;
-        public static Queue<MidiMessage> mesOutBuff;
+        public static Queue<MidiMessage> mesOutBuff; //swap this for normal list 
         private static double updateLookAhead = 1000; //ms
         private static double startTime = 0.0;
+        private static bool hasStarted = false;
 
         public static int Start()
         {
-            mesOutBuff = new Queue<MidiMessage>();
-            startTime = AudioSettings.dspTime;
-            //Enqueue, Dequeue
-            return PortMidi.main_test_output();
+            if (!hasStarted)
+            {
+                hasStarted = true;
+                mesOutBuff = new Queue<MidiMessage>();
+                startTime = AudioSettings.dspTime;
+                return PortMidi.main_test_output();
+            }
+            else
+                return -1;
         }
 
         public static void PlayScheduled(MidiMessage p_message, double p_time)
@@ -37,6 +42,8 @@ namespace cwMidi
 
         public static void Play(MidiMessage p_message)
         {
+            if(Midi.debugLevel > 4) Debug.Log("Add note to play " + p_message.getByteOne()); 
+
             PortMidi.midiEvent(p_message.getStatusByte(), p_message.getByteOne(), p_message.getByteTwo(), 0);
         }
 
@@ -50,14 +57,17 @@ namespace cwMidi
 
         public static void PlayNext(MidiMessage p_message)
         {
+            /*if (Midi.debugLevel > 4) */Debug.Log("Add note to play " + p_message.getByteOne() + " " + p_message.getByteTwo() + " at time: " + p_message.getAbsTimeStamp());
+
             mesOutBuff.Enqueue(p_message);
-            int ppqTime = p_message.getTimeStamp();
-            p_message.getOwnerTrack().trackPPQAbsolutePos += ppqTime; //this sets write head for ppq
-            p_message.absolutePPQTime = p_message.getOwnerTrack().trackPPQAbsolutePos; // as opposed to relative time
+            if(p_message.getOwnerTrack() != null)
+                p_message.getOwnerTrack().trackPPQAbsolutePos = p_message.getAbsTimeStamp(); //this sets write head for ppq
         }
 
         public static void PlayTrack(MidiTrack p_track)
         {
+            if (Midi.debugLevel > 3) Debug.Log("Play Midi track");
+
             resetMidiEventClock();
             p_track.trackPPQAbsolutePos = 0;
             for (int _notes = 0; _notes < p_track.getNumNotes(); _notes++)
@@ -73,13 +83,19 @@ namespace cwMidi
             if(mesOutBuff.Count > 0)
             {
                 MidiMessage temporaryMessage = mesOutBuff.Peek();
-                double msUntilEvent =  Metronome.ppqToMs(temporaryMessage.absolutePPQTime) - (currentTime - metronomeStartTime); 
+                double msUntilEvent =  Metronome.ppqToMs(temporaryMessage.getAbsTimeStamp()) - (currentTime - metronomeStartTime);
+                
                 while (msUntilEvent < updateLookAhead && mesOutBuff.Count > 0)
                 {
-                    //UnityEngine.Debug.Log("Event time: " + eventTime);
+                    Debug.Log("Absolute timestamp = " + temporaryMessage.getAbsTimeStamp());
                     long msOffset = (long)(msUntilEvent);
+                    UnityEngine.Debug.Log("Event time: " + msOffset);
                     if (msOffset < 0)
+                    {
                         msOffset = 0;
+                        Debug.Log("<color=red>Error: negative event time offset</color>");
+                    }
+                        
                     MidiMessage p_message = mesOutBuff.Dequeue();
                     PortMidi.midiEvent(p_message.getStatusByte(), p_message.getByteOne(), p_message.getByteTwo(),
                                      (int)(msOffset));
@@ -87,7 +103,7 @@ namespace cwMidi
                     if(mesOutBuff.Count > 0)
                     {
                         temporaryMessage = mesOutBuff.Peek(); //check next element for timestamp pos
-                        msUntilEvent = Metronome.ppqToMs(temporaryMessage.absolutePPQTime) - (currentTime - metronomeStartTime);
+                        msUntilEvent = Metronome.ppqToMs(temporaryMessage.getAbsTimeStamp()) - (currentTime - metronomeStartTime);
                     }
                 }
             }
@@ -98,15 +114,15 @@ namespace cwMidi
             metronomeStartTime = (AudioSettings.dspTime - startTime) * 1000; //m/s since start of program- provides offset
         }
 
-        public static void SetBPM(int p_BPM)
-        {
+        //public static void SetBPM(int p_BPM)
+        //{
 
-        }
+        //}
 
-        public static void SetPPQ(int p_PPQ)
-        {
+        //public static void SetPPQ(int p_PPQ)
+        //{
 
-        }
+        //}
 
         public static void StartMetronome(int p_BPM)
         {
@@ -132,6 +148,8 @@ namespace cwMidi
         {
             PortMidi.shutdown();
             PortMidi.Pm_Terminate();
+            startTime = 0;
+            metronomeStartTime = 0;
             return 1;
         }
     }

@@ -7,9 +7,9 @@ using cwMidi;
 
 public class MarkovNote : MidiMessage{
 
-    public int length;
+    public long length;
 
-	public MarkovNote(byte stat, byte data1, byte data2, int length = -1)
+	public MarkovNote(byte stat, byte data1, byte data2, long length = -1)
     {
         messageAsBytes = new byte[4];
         messageAsBytes[0] = 0x00;
@@ -24,7 +24,7 @@ public class MarkovNote : MidiMessage{
         controlByte2 = data2;
     }
 
-    public MarkovNote(MidiMessage _mes, int length = -1)
+    public MarkovNote(MidiMessage _mes, long length = -1)
     {
         messageAsBytes = new byte[4];
         messageAsBytes = _mes.getMessageAsBytes();

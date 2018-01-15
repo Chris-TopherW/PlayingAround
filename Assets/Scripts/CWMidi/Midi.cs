@@ -7,12 +7,13 @@ namespace cwMidi
 {
     public static class Midi
     {
+        public static int debugLevel;
 
         public static Dictionary<int, string> MessType = new Dictionary<int, string>()
         {
             { 0x0002 , "sequenceNum" },
             { 0x01 , "textEvent" },
-            { 0x02 , "copyrightMes" },
+            /*{ 0x02 , "copyrightMes" }, */
             { 0x03 , "trackName" },
             { 0x04 , "instName" },
             { 0x05 , "lyrics" },

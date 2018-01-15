@@ -34,6 +34,7 @@ namespace cwMidi
             if (p_message == null) UnityEngine.Debug.Log("Message is NULL");
             p_message.setOwnerTrack(this);
             trackPPQLen += p_message.getTimeStamp();
+            p_message.setAbsTimestamp(trackPPQLen);
             numNotes++;
             UInt16 numBytesInMes = p_message.getNumBytes();
             trkLen += numBytesInMes;
@@ -43,23 +44,25 @@ namespace cwMidi
                 Array.Reverse(trkLenBytes);
         }
 
-        public void insertNote(MidiMessage p_message, int p_index)
-        {
-            trackMessages.Insert(p_index, p_message);
-            numNotes++;
-            UInt16 numBytesInMes = p_message.getNumBytes();
-            trkLen += numBytesInMes;
+        //public void insertNote(MidiMessage p_message, int p_index)
+        //{
+        //    trackMessages.Insert(p_index, p_message);
+        //    numNotes++;
+        //    UInt16 numBytesInMes = p_message.getNumBytes();
+        //    trkLen += numBytesInMes;
 
-            trkLenBytes = BitConverter.GetBytes(numBytesInMes);
-            if (BitConverter.IsLittleEndian)
-                Array.Reverse(trkLenBytes);
-        }
+        //    trkLenBytes = BitConverter.GetBytes(numBytesInMes);
+        //    if (BitConverter.IsLittleEndian)
+        //        Array.Reverse(trkLenBytes);
+        //    //need to rearrange abs vals
+        //}
 
-        public void RemoveNote(int p_index)
-        {
-            trackMessages.RemoveAt(p_index);
-            numNotes--;
-        }
+        //public void RemoveNote(int p_index)
+        //{
+        //    trackMessages.RemoveAt(p_index);
+        //    numNotes--;
+        //    //also need to rearrange absolute values in here!
+        //}
 
         public void clearTrack()
         {
