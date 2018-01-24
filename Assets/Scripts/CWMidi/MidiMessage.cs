@@ -5,6 +5,8 @@ namespace cwMidi
     public class MidiMessage
     {
 
+        public MidiSource noteSource; //reference to playback source- for muting/ onle fly volume changes etc
+
         protected byte[] messageAsBytes;
         protected UInt16 numBytes = 0;
         protected int bytesInTimeStamp;
@@ -74,6 +76,15 @@ namespace cwMidi
         public int getStatusByte() { return status;  }
         public int getMidiEvent() { return midiEvent; }
         public MidiTrack getOwnerTrack() { return ownerTrack; }
+
+        public float getGain() {
+            if (noteSource != null) return noteSource.Volume;
+            else
+            {
+                //UnityEngine.Debug.Log("midi message has no owning midi source, setting gain to default");
+                return 1.0f;
+            }
+        }
 
         private int midiHexTimeToNormalTime(byte[] n)
         {

@@ -219,12 +219,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\MidiEngine.cs" />
     <Compile Include="Assets\Scripts\CWMidi\Metronome.cs" />
     <Compile Include="Assets\Scripts\CWMidi\Midi.cs" />
     <Compile Include="Assets\Scripts\CWMidi\MidiFile.cs" />
     <Compile Include="Assets\Scripts\CWMidi\MidiHeader.cs" />
     <Compile Include="Assets\Scripts\CWMidi\MidiMessage.cs" />
     <Compile Include="Assets\Scripts\CWMidi\MidiPlayer.cs" />
+    <Compile Include="Assets\Scripts\CWMidi\MidiSource.cs" />
     <Compile Include="Assets\Scripts\CWMidi\MidiTrack.cs" />
     <Compile Include="Assets\Scripts\CWMidi\MidiWindow.cs" />
     <Compile Include="Assets\Scripts\CWMidi\PortMidi.cs" />
@@ -233,12 +235,14 @@
     <Compile Include="Assets\Scripts\Markov\SortedMidiTrack.cs" />
     <Compile Include="Assets\Scripts\Markov\TransitionMatrix.cs" />
     <Compile Include="Assets\Scripts\Markov\TransitionNode.cs" />
-    <Compile Include="Assets\Scripts\PlaySomeMidi.cs" />
+    <Compile Include="Assets\Scripts\PluginHost\PluginHost.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\C-D-C-E-C-G-C-E.txt" />
     <None Include="Assets\MidiExport2.txt" />
     <None Include="Assets\cMajorC3Ascending.txt" />
+    <None Include="Assets\midi_exporto.txt" />
+    <None Include="Assets\vs1-2fug.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />

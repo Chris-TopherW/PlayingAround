@@ -38,22 +38,22 @@ public class FancyMarkov : MonoBehaviour {
         //    midiTrack.AddNote(_note);
         //    midiTrack.AddNote(_off);
         //}
-        MidiPlayer.resetMidiEventClock();
-        MidiMessage mes;
-        MidiMessage _off;
-        int timestamp = 0;
+        //MidiPlayer.resetMidiEventClock();
+        //MidiMessage mes;
+        //MidiMessage _off;
+        //int timestamp = 0;
 
-        for(int i = 0; i < 5; i++)
-        {
-            mes = matrix.getNextNote();
-            mes.setAbsTimestamp(timestamp);
-            _off = new MidiMessage(0x80, (byte)mes.getByteOne(), 0x00);
-            _off.setAbsTimestamp(timestamp + 250);
+        //for(int i = 0; i < 5; i++)
+        //{
+        //    mes = matrix.getNextNote();
+        //    mes.setAbsTimestamp(timestamp);
+        //    _off = new MidiMessage(0x80, (byte)mes.getByteOne(), 0x00);
+        //    _off.setAbsTimestamp(timestamp + 250);
 
-            MidiPlayer.PlayNext(mes);
-            MidiPlayer.PlayNext(_off);
-            timestamp += 500;
-        }
+        //    MidiPlayer.PlayNext(mes);
+        //    MidiPlayer.PlayNext(_off);
+        //    timestamp += 500;
+        //}
         
 
 

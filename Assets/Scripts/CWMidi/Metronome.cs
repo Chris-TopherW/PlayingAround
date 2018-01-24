@@ -7,7 +7,7 @@ namespace cwMidi
     public static class Metronome
     {
 
-        private static int BPM = 120;
+        private static double BPM = 120;
         private static double metronomeStartTime = 0.0;
 
         public static double ppqToMs(long p_timestamp)
@@ -36,5 +36,6 @@ namespace cwMidi
         }
 
         public static double getMetroStartTime() { return metronomeStartTime; }
+        public static void setBPM(double p_BPM) { BPM = p_BPM; }
     }
 }
