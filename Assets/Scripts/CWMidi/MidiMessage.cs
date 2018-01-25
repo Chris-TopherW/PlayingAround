@@ -97,5 +97,11 @@ namespace cwMidi
             t += n[len - 1];
             return t;
         }
+
+        public MidiMessage copy()
+        {
+            MidiMessage other = (MidiMessage)this.MemberwiseClone();
+            return other;
+        }
     }
 }

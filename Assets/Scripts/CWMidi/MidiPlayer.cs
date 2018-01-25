@@ -8,7 +8,7 @@ namespace cwMidi
         private static double metronomeStartTime = 0.0;
         public static int deviceNum = 0;
         private static double previousEventMS = 0.0;
-        public static Queue<MidiMessage> mesOutBuff; //swap this for normal list 
+        public static List<MidiMessage> messOutBuff;
         private static double updateLookAhead = 1000; //ms
         private static double startTime = 0.0;
         private static bool hasStarted = false;
@@ -18,7 +18,7 @@ namespace cwMidi
             if (!hasStarted)
             {
                 hasStarted = true;
-                mesOutBuff = new Queue<MidiMessage>();
+                messOutBuff = new List<MidiMessage>();
                 startTime = AudioSettings.dspTime;
                 return PortMidi.main_test_output();
             }
@@ -59,7 +59,7 @@ namespace cwMidi
         {
             if (Midi.debugLevel > 4) Debug.Log("Add note to play " + p_message.getByteOne() + " " + p_message.getByteTwo() + " at time: " + p_message.getAbsTimeStamp());
             p_message.noteSource = p_source;
-            mesOutBuff.Enqueue(p_message);
+            messOutBuff.Add(p_message);
             if(p_message.getOwnerTrack() != null)
                 p_message.getOwnerTrack().trackPPQAbsolutePos = p_message.getAbsTimeStamp(); //this sets write head for ppq
         }
@@ -70,21 +70,21 @@ namespace cwMidi
 
             resetMidiEventClock();
             p_track.trackPPQAbsolutePos = 0; //problem if playing the same track twice... Maybe should store in MidiSource obj
-            //long accumulatedTrackLen = 0;
+            long accumulatedTrackLen = 0;
             for (int _notes = 0; _notes < p_track.getNumNotes(); _notes++)
             {
                 //hmm, not quite...
                 MidiMessage nextNote = p_track.getNote(_notes);
                 PlayNext(nextNote, p_source);
-               // accumulatedTrackLen += nextNote.getPPQ();
+                accumulatedTrackLen += nextNote.getPPQ();
             }
-            //if(p_source.Loop)
+            //if (p_source.Loop)
             //{
             //    for (int _notes = 0; _notes < p_track.getNumNotes(); _notes++)
             //    {
-            //        MidiMessage nextNote = p_track.getNote(_notes);
-            //        //nextNote.setAbsTimestamp(nextNote.getAbsTimeStamp() + accumulatedTrackLen); //here's the problem! changing this messes with everything
-            //        //PlayNext(nextNote, p_source);
+            //        MidiMessage nextNote = p_track.getNote(_notes).copy();
+            //        nextNote.setAbsTimestamp(nextNote.getAbsTimeStamp() + accumulatedTrackLen); //here's the problem! changing this messes with everything
+            //       PlayNext(nextNote, p_source);
             //    }
             //}
         }
@@ -92,30 +92,34 @@ namespace cwMidi
         public static void Update()
         {
             double currentTime = (AudioSettings.dspTime - startTime) * 1000.0;
-            if(mesOutBuff.Count > 0)
+            if(messOutBuff.Count > 0)
             {
-                MidiMessage temporaryMessage = mesOutBuff.Peek();
-                //double msUntilEvent =  Metronome.ppqToMs(temporaryMessage.getAbsTimeStamp()) - (currentTime - metronomeStartTime);
+                MidiMessage temporaryMessage = messOutBuff[messOutBuff.Count - 1];
                 double msUntilEvent = temporaryMessage.noteSource.startTimeOffset + Metronome.ppqToMs(temporaryMessage.getAbsTimeStamp()) - currentTime - metronomeStartTime;
 
 
-                while (msUntilEvent < updateLookAhead + temporaryMessage.noteSource.startTimeOffset && mesOutBuff.Count > 0)
+                while (msUntilEvent < updateLookAhead + temporaryMessage.noteSource.startTimeOffset && messOutBuff.Count > 0)
                 {
-                    Debug.Log("Absolute timestamp = " + temporaryMessage.getAbsTimeStamp());
+                    if (Midi.debugLevel > 0) Debug.Log("Absolute timestamp = " + temporaryMessage.getAbsTimeStamp());
                     long msOffset = (long)(msUntilEvent);
-                    UnityEngine.Debug.Log("Event time: " + msOffset);
+                    if (Midi.debugLevel > 0) UnityEngine.Debug.Log("Event time: " + msOffset);
                     if (msOffset < 0)
                     {
                         msOffset = 0;
-                        Debug.Log("<color=red>Error: negative event time offset</color>");
+                        Debug.Log("<color=red>Error: negative event time offset</color>, setting time to 0");
                     }
                     
-                    MidiMessage p_message = mesOutBuff.Dequeue();
+                    MidiMessage p_message = messOutBuff[0];
+                    messOutBuff.RemoveAt(0);
                     int statusByte;
                     int amplitude;
 
-                    if (p_message.noteSource.ForceToChannel) 
-                        statusByte = p_message.getStatusByte() | p_message.noteSource.Channel; 
+                    if (p_message.noteSource.ForceToChannel)
+                    {
+                        statusByte = p_message.getStatusByte() & 0xF0;
+                        statusByte = statusByte += p_message.noteSource.Channel - 1;
+                    }
+                        
                     else 
                         statusByte = p_message.getStatusByte(); 
 
@@ -126,9 +130,9 @@ namespace cwMidi
 
                     PortMidi.midiEvent(statusByte, p_message.getByteOne() + p_message.noteSource.PitchOffset, amplitude, (int)(msOffset));
 
-                    if (mesOutBuff.Count > 0)
+                    if (messOutBuff.Count > 0)
                     {
-                        temporaryMessage = mesOutBuff.Peek(); //check next element for timestamp pos
+                        temporaryMessage = messOutBuff[0];
                         msUntilEvent = Metronome.ppqToMs(temporaryMessage.getAbsTimeStamp()) - (currentTime - metronomeStartTime);
                     }
                 }
@@ -150,26 +154,19 @@ namespace cwMidi
 
     //}
 
-    public static void StartMetronome(int p_BPM)
+        public static void StartMetronome(int p_BPM)
         {
             Metronome.setBPM(p_BPM);
             metronomeStartTime = AudioSettings.dspTime;
         }
 
-        //public static void Stop()
-        //{
 
-        //}
+        public static void reorderQueue()
+        {
+            messOutBuff.Sort((a, b) => { return a.getAbsTimeStamp().CompareTo(b.getAbsTimeStamp()); });
+        }
 
-        //public static void Stop(int p_delay)
-        //{
-
-        //}
-
-        //public static void Clear()
-        //{
-
-        //}
+        
 
         public static int Shutdown()
         {

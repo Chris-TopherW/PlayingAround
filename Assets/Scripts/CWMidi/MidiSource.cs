@@ -38,7 +38,13 @@ public class MidiSource : MonoBehaviour {
 
     void Start () {
 
-        if(PlayOnAwake) Play(); 
+        if (Channel < 1 || Channel > 16)
+        {
+            Debug.Log("<color=red>Error:</color> Channels must be between 1 and 16. Auto set to 1");
+            Channel = 1;
+        }
+            
+        if (PlayOnAwake) Play(); 
 
     }
 
@@ -50,16 +56,17 @@ public class MidiSource : MonoBehaviour {
             previousBpm = bpm;
         }
 
-        if(!hasPlayed && Time.time > 3.0f)
-        {
-            Play();
-            hasPlayed = true;
-        }
+        //if(!hasPlayed && Time.time > 3.0f)
+        //{
+        //    Play();
+        //    hasPlayed = true;
+        //}
     }
 
     private void Play()
     {
         startTimeOffset = AudioSettings.dspTime;
         MidiPlayer.PlayTrack(midiFile.getMidiTrack(1), this);
+        MidiPlayer.reorderQueue();
     }
 }

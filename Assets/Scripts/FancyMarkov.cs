@@ -11,6 +11,7 @@ public class FancyMarkov : MonoBehaviour {
     private cwMidi.MidiFile midiFile;
     private MidiTrack midiTrack;
     int midiOutputDevice;
+    private MidiSource midiSource;
 
     private void Awake()
     {
@@ -19,6 +20,7 @@ public class FancyMarkov : MonoBehaviour {
         midiOutputDevice = MidiPlayer.Start();
         if (Midi.debugLevel > 3) midiFile.printCookedMidiFile();
         matrix = new TransitionMatrix(midiFile.getMidiTrack(1));
+        midiSource = GetComponent<MidiSource>();
     }
 
     void Start () {
@@ -39,22 +41,22 @@ public class FancyMarkov : MonoBehaviour {
         //    midiTrack.AddNote(_off);
         //}
         //MidiPlayer.resetMidiEventClock();
-        //MidiMessage mes;
-        //MidiMessage _off;
-        //int timestamp = 0;
+        MidiMessage mes;
+        MidiMessage _off;
+        int timestamp = 0;
 
-        //for(int i = 0; i < 5; i++)
-        //{
-        //    mes = matrix.getNextNote();
-        //    mes.setAbsTimestamp(timestamp);
-        //    _off = new MidiMessage(0x80, (byte)mes.getByteOne(), 0x00);
-        //    _off.setAbsTimestamp(timestamp + 250);
+        for (int i = 0; i < 5; i++)
+        {
+            mes = matrix.getNextNote();
+            mes.setAbsTimestamp(timestamp);
+            _off = new MidiMessage(0x80, (byte)mes.getByteOne(), 0x00);
+            _off.setAbsTimestamp(timestamp + 250);
 
-        //    MidiPlayer.PlayNext(mes);
-        //    MidiPlayer.PlayNext(_off);
-        //    timestamp += 500;
-        //}
-        
+            MidiPlayer.PlayNext(mes, midiSource);
+            MidiPlayer.PlayNext(_off, midiSource);
+            timestamp += 500;
+        }
+
 
 
         //MidiPlayer.PlayTrack(midiTrack);
