@@ -213,7 +213,6 @@ MonoBehaviour:
   startTimeOffset: 0
   Volume: 1
   PitchOffset: 0
-  bpm: 120
 --- !u!4 &567117958
 Transform:
   m_ObjectHideFlags: 0
@@ -342,6 +341,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b6f1acb932899b4ba2850d20303eafe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bpm: 120
 --- !u!4 &1117639864
 Transform:
   m_ObjectHideFlags: 0
@@ -458,7 +458,6 @@ MonoBehaviour:
   startTimeOffset: 0
   Volume: 1
   PitchOffset: 0
-  bpm: 120
 --- !u!1 &2120629446
 GameObject:
   m_ObjectHideFlags: 0
@@ -474,7 +473,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &2120629447
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -495,7 +494,6 @@ MonoBehaviour:
   startTimeOffset: 0
   Volume: 1
   PitchOffset: 0
-  bpm: 120
 --- !u!4 &2120629448
 Transform:
   m_ObjectHideFlags: 0

@@ -5,12 +5,11 @@ namespace cwMidi
 {
     public static class MidiPlayer
     {
-        private static double metronomeStartTime = 0.0;
+        private static double metronomeStartTimeMs = 0.0;
         public static int deviceNum = 0;
         private static double previousEventMS = 0.0;
         public static List<MidiMessage> messOutBuff;
         private static double updateLookAhead = 1000; //ms
-        private static double startTime = 0.0;
         private static bool hasStarted = false;
 
         public static int Start()
@@ -19,7 +18,7 @@ namespace cwMidi
             {
                 hasStarted = true;
                 messOutBuff = new List<MidiMessage>();
-                startTime = AudioSettings.dspTime;
+                //startTime = AudioSettings.dspTime;
                 return PortMidi.main_test_output();
             }
             else
@@ -66,17 +65,15 @@ namespace cwMidi
 
         public static void PlayTrack(MidiTrack p_track, MidiSource p_source)
         {
-            if (Midi.debugLevel > 3) Debug.Log("Play Midi track");
-
-            resetMidiEventClock();
+            //resetMidiEventClock();
             p_track.trackPPQAbsolutePos = 0; //problem if playing the same track twice... Maybe should store in MidiSource obj
-            long accumulatedTrackLen = 0;
+            long accumulatedTrackLenPPQ = 0;
             for (int _notes = 0; _notes < p_track.getNumNotes(); _notes++)
             {
                 //hmm, not quite...
                 MidiMessage nextNote = p_track.getNote(_notes);
                 PlayNext(nextNote, p_source);
-                accumulatedTrackLen += nextNote.getPPQ();
+                accumulatedTrackLenPPQ += nextNote.getPPQ();
             }
             //if (p_source.Loop)
             //{
@@ -91,22 +88,29 @@ namespace cwMidi
 
         public static void Update()
         {
-            double currentTime = (AudioSettings.dspTime - startTime) * 1000.0;
+            double currentTime = (AudioSettings.dspTime) * 1000.0;
             if(messOutBuff.Count > 0)
             {
                 MidiMessage temporaryMessage = messOutBuff[messOutBuff.Count - 1];
-                double msUntilEvent = temporaryMessage.noteSource.startTimeOffset + Metronome.ppqToMs(temporaryMessage.getAbsTimeStamp()) - currentTime - metronomeStartTime;
+                double msUntilEvent = temporaryMessage.noteSource.startTimeOffset + Metronome.ppqToMs(temporaryMessage.getAbsTimeStamp()) - currentTime;
+                //Debug.Log("ms until next event: " + msUntilEvent);
+                //Debug.Log("start time offset = " + temporaryMessage.noteSource.startTimeOffset);
 
 
-                while (msUntilEvent < updateLookAhead + temporaryMessage.noteSource.startTimeOffset && messOutBuff.Count > 0)
+                while (msUntilEvent < updateLookAhead && messOutBuff.Count > 0)
                 {
                     if (Midi.debugLevel > 0) Debug.Log("Absolute timestamp = " + temporaryMessage.getAbsTimeStamp());
                     long msOffset = (long)(msUntilEvent);
-                    if (Midi.debugLevel > 0) UnityEngine.Debug.Log("Event time: " + msOffset);
+                    ///*if (Midi.debugLevel > 0) */UnityEngine.Debug.Log("Event time: " + msOffset);
                     if (msOffset < 0)
                     {
+                        Debug.Log("<color=red>Error: negative event time offset : </color>" + msOffset + ", setting time to 0");
+                        Debug.Log("source start time offset : " + temporaryMessage.noteSource.startTimeOffset);
+                        Debug.Log("MS time of note relative to track start : " + Metronome.ppqToMs(temporaryMessage.getAbsTimeStamp()));
+                        Debug.Log("Current time : " + currentTime);
+                        Debug.Log("metro start time : " + metronomeStartTimeMs);
                         msOffset = 0;
-                        Debug.Log("<color=red>Error: negative event time offset</color>, setting time to 0");
+                        
                     }
                     
                     MidiMessage p_message = messOutBuff[0];
@@ -133,7 +137,7 @@ namespace cwMidi
                     if (messOutBuff.Count > 0)
                     {
                         temporaryMessage = messOutBuff[0];
-                        msUntilEvent = Metronome.ppqToMs(temporaryMessage.getAbsTimeStamp()) - (currentTime - metronomeStartTime);
+                        msUntilEvent =  temporaryMessage.noteSource.startTimeOffset +  Metronome.ppqToMs(temporaryMessage.getAbsTimeStamp()) - currentTime;
                     }
                 }
             }
@@ -141,7 +145,7 @@ namespace cwMidi
 
         public static void resetMidiEventClock()
         {
-            metronomeStartTime = (AudioSettings.dspTime - startTime) * 1000; //m/s since start of program- provides offset
+            metronomeStartTimeMs = (AudioSettings.dspTime) * 1000; //m/s since start of program- provides offset
         }
 
         public static void SetBPM(int p_BPM)
@@ -149,31 +153,25 @@ namespace cwMidi
             Metronome.setBPM(p_BPM);
         }
 
-    //public static void SetPPQ(int p_PPQ)
-    //{
-
-    //}
-
         public static void StartMetronome(int p_BPM)
         {
             Metronome.setBPM(p_BPM);
-            metronomeStartTime = AudioSettings.dspTime;
+            metronomeStartTimeMs = AudioSettings.dspTime * 1000;
         }
 
+        public static double getMetronomeStartTime() { return metronomeStartTimeMs; }
+        public static void setMetronomeStartTimeMs(double p_time) { metronomeStartTimeMs = p_time; }
 
         public static void reorderQueue()
         {
             messOutBuff.Sort((a, b) => { return a.getAbsTimeStamp().CompareTo(b.getAbsTimeStamp()); });
         }
 
-        
-
         public static int Shutdown()
         {
             PortMidi.shutdown();
             PortMidi.Pm_Terminate();
-            startTime = 0;
-            metronomeStartTime = 0;
+            //metronomeStartTimeMs = 0;
             return 1;
         }
     }
