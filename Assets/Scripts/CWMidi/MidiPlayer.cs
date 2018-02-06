@@ -91,12 +91,10 @@ namespace cwMidi
             double currentTime = (AudioSettings.dspTime) * 1000.0;
             if(messOutBuff.Count > 0)
             {
-                MidiMessage temporaryMessage = messOutBuff[messOutBuff.Count - 1];
-                double msUntilEvent = temporaryMessage.noteSource.startTimeOffset + Metronome.ppqToMs(temporaryMessage.getAbsTimeStamp()) - currentTime;
-                //Debug.Log("ms until next event: " + msUntilEvent);
-                //Debug.Log("start time offset = " + temporaryMessage.noteSource.startTimeOffset);
+                MidiMessage temporaryMessage = messOutBuff[0];
+                double msUntilEvent = temporaryMessage.noteSource.startTimeOffset + Metronome.ppqToMs(temporaryMessage.getAbsTimeStamp());
 
-
+                //this while accounts for multiple notes at once
                 while (msUntilEvent < updateLookAhead && messOutBuff.Count > 0)
                 {
                     if (Midi.debugLevel > 0) Debug.Log("Absolute timestamp = " + temporaryMessage.getAbsTimeStamp());
@@ -110,7 +108,6 @@ namespace cwMidi
                         Debug.Log("Current time : " + currentTime);
                         Debug.Log("metro start time : " + metronomeStartTimeMs);
                         msOffset = 0;
-                        
                     }
                     
                     MidiMessage p_message = messOutBuff[0];

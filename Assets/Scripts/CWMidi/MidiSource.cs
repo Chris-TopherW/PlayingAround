@@ -44,7 +44,7 @@ public class MidiSource : MonoBehaviour {
 
     private void Play()
     {
-        startTimeOffset = AudioSettings.dspTime * 1000 - MidiPlayer.getMetronomeStartTime(); //why the metronome offset?
+        startTimeOffset = AudioSettings.dspTime * 1000 /*- MidiPlayer.getMetronomeStartTime()*/; //why the metronome offset?
         Debug.Log("Offset: " + startTimeOffset);
         Debug.Log("start time in ms: " + MidiPlayer.getMetronomeStartTime());
         MidiPlayer.PlayTrack(midiFile.getMidiTrack(1), this);
