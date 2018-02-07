@@ -92,7 +92,7 @@ namespace cwMidi
             if(messOutBuff.Count > 0)
             {
                 MidiMessage temporaryMessage = messOutBuff[0];
-                double msUntilEvent = temporaryMessage.noteSource.startTimeOffset + Metronome.ppqToMs(temporaryMessage.getAbsTimeStamp());
+                double msUntilEvent = temporaryMessage.noteSource.startTimeOffset + Metronome.ppqToMs(temporaryMessage.getAbsTimeStamp()) - currentTime;
 
                 //this while accounts for multiple notes at once
                 while (msUntilEvent < updateLookAhead && messOutBuff.Count > 0)
