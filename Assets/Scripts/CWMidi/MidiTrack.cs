@@ -109,5 +109,6 @@ namespace cwMidi
         public int getTrackNum() { return trackNum; }
         public long getTrackPPQReadPos() { return trackPPQAbsolutePos; }
         public void setTrackNum(int p_trackNum) { trackNum = p_trackNum; }
+        public long getTrackPPQLen() { return trackPPQLen; }
     }
 }

@@ -17,7 +17,6 @@ public class MidiEngine : MonoBehaviour {
 
     private void Start()
     {
-        Debug.Log("Start @ AudioSettings.dspTime = " + AudioSettings.dspTime);
         MidiPlayer.resetMidiEventClock();
     }
 

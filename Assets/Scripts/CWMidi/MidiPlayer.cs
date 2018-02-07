@@ -74,15 +74,6 @@ namespace cwMidi
                 PlayNext(nextNote, p_source);
                 accumulatedTrackLenPPQ += nextNote.getPPQ();
             }
-            //if (p_source.Loop)
-            //{
-            //    for (int _notes = 0; _notes < p_track.getNumNotes(); _notes++)
-            //    {
-            //        MidiMessage nextNote = p_track.getNote(_notes).copy();
-            //        nextNote.setAbsTimestamp(nextNote.getAbsTimeStamp() + accumulatedTrackLen); //here's the problem! changing this messes with everything
-            //       PlayNext(nextNote, p_source);
-            //    }
-            //}
         }
 
         public static void Update()

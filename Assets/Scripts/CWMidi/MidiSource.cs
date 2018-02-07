@@ -10,7 +10,6 @@ public class MidiSource : MonoBehaviour {
     private MidiTrack midiTrack;
     private long trackPPQAbsolutePos = 0;
 
-
     public bool Mute;
     public bool PlayOnAwake;
     public bool Loop;
@@ -26,6 +25,8 @@ public class MidiSource : MonoBehaviour {
     [Range(-127, 127)]
     public int PitchOffset;
 
+    private bool tempHasPlayed = false;
+
     private void Awake()
     {
         midiFile = new cwMidi.MidiFile(MidiClip);
@@ -39,9 +40,7 @@ public class MidiSource : MonoBehaviour {
             Debug.Log("<color=red>Error:</color> Channels must be between 1 and 16. Auto set to 1");
             Channel = 1;
         }
-            
         if (PlayOnAwake) Play(); 
-
     }
 
     private void Play()
@@ -55,6 +54,13 @@ public class MidiSource : MonoBehaviour {
 
     private void Update()
     {
+        if(Loop)
+        if (AudioSettings.dspTime * 1000 > startTimeOffset + Metronome.ppqToMs(midiFile.getMidiTrack(1).getTrackPPQLen()))
+        {
+            Debug.Log("BANG!");
+            startTimeOffset += Metronome.ppqToMs(midiFile.getMidiTrack(1).getTrackPPQLen());
+            Play();
+        }
 
     }
 

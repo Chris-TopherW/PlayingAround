@@ -193,7 +193,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &567117957
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -208,7 +208,7 @@ MonoBehaviour:
   MidiClip: {fileID: 4900000, guid: 5e8c4fe4198d29c43bd8e3128a22237a, type: 3}
   Mute: 0
   PlayOnAwake: 1
-  Loop: 0
+  Loop: 1
   ForceToChannel: 1
   Channel: 1
   startTimeOffset: 0
@@ -414,7 +414,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1360612124
 MonoBehaviour:
   m_ObjectHideFlags: 0
