@@ -6,7 +6,6 @@ using cwMidi;
 public class MidiEngine : MonoBehaviour {
 
     private int midiOutputDevice;
-
     public int bpm = 120;
     private int previousBpm;
 

@@ -59,14 +59,13 @@ namespace cwMidi
             if (Midi.debugLevel > 4) Debug.Log("Add note to play " + p_message.getByteOne() + " " + p_message.getByteTwo() + " at time: " + p_message.getAbsTimeStamp());
             p_message.noteSource = p_source;
             messOutBuff.Add(p_message);
-            if(p_message.getOwnerTrack() != null)
-                p_message.getOwnerTrack().trackPPQAbsolutePos = p_message.getAbsTimeStamp(); //this sets write head for ppq
+            if (p_message.getOwnerTrack() != null)
+                p_source.setTrackPPQAbsolutePos(p_message.getAbsTimeStamp()); //this sets write head for ppq
         }
 
         public static void PlayTrack(MidiTrack p_track, MidiSource p_source)
         {
-            //resetMidiEventClock();
-            p_track.trackPPQAbsolutePos = 0; //problem if playing the same track twice... Maybe should store in MidiSource obj
+            p_source.setTrackPPQAbsolutePos(0); 
             long accumulatedTrackLenPPQ = 0;
             for (int _notes = 0; _notes < p_track.getNumNotes(); _notes++)
             {

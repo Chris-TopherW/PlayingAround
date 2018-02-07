@@ -8,12 +8,14 @@ public class MidiSource : MonoBehaviour {
     public TextAsset MidiClip;
     private cwMidi.MidiFile midiFile;
     private MidiTrack midiTrack;
-    
+    private long trackPPQAbsolutePos = 0;
+
+
     public bool Mute;
     public bool PlayOnAwake;
     public bool Loop;
     public bool ForceToChannel;
-    public int Channel;
+    public int Channel = 1;
 
     [HideInInspector]
     public double startTimeOffset = 0.0;
@@ -44,7 +46,7 @@ public class MidiSource : MonoBehaviour {
 
     private void Play()
     {
-        startTimeOffset = AudioSettings.dspTime * 1000 /*- MidiPlayer.getMetronomeStartTime()*/; //why the metronome offset?
+        startTimeOffset = AudioSettings.dspTime * 1000; /*- MidiPlayer.getMetronomeStartTime()*/ //why the metronome offset?
         Debug.Log("Offset: " + startTimeOffset);
         Debug.Log("start time in ms: " + MidiPlayer.getMetronomeStartTime());
         MidiPlayer.PlayTrack(midiFile.getMidiTrack(1), this);
@@ -54,5 +56,15 @@ public class MidiSource : MonoBehaviour {
     private void Update()
     {
 
+    }
+
+    public long getTrackPPQAbsolutePos()
+    {
+        return trackPPQAbsolutePos;
+    }
+
+    public void setTrackPPQAbsolutePos(long p_pos)
+    {
+        trackPPQAbsolutePos = p_pos;
     }
 }

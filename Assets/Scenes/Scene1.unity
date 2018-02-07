@@ -193,7 +193,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &567117957
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -414,7 +414,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1360612124
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -426,7 +426,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d75934adf9484b54e815d5d37f689939, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  file: {fileID: 4900000, guid: c424a7b3d4fdbb24dab9ac27123b5c7f, type: 3}
 --- !u!4 &1360612125
 Transform:
   m_ObjectHideFlags: 0
@@ -451,12 +450,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c2e96f0f2648ca40a6f9f792df4d399, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MidiClip: {fileID: 0}
+  MidiClip: {fileID: 4900000, guid: c424a7b3d4fdbb24dab9ac27123b5c7f, type: 3}
   Mute: 0
   PlayOnAwake: 0
   Loop: 0
   ForceToChannel: 0
-  Channel: 0
+  Channel: 1
   startTimeOffset: 0
   Volume: 1
   PitchOffset: 0
@@ -491,7 +490,7 @@ MonoBehaviour:
   Mute: 0
   PlayOnAwake: 1
   Loop: 0
-  ForceToChannel: 1
+  ForceToChannel: 0
   Channel: 2
   startTimeOffset: 0
   Volume: 1
