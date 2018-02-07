@@ -92,11 +92,11 @@ namespace cwMidi
                     ///*if (Midi.debugLevel > 0) */UnityEngine.Debug.Log("Event time: " + msOffset);
                     if (msOffset < 0)
                     {
-                        Debug.Log("<color=red>Error: negative event time offset : </color>" + msOffset + ", setting time to 0");
-                        Debug.Log("source start time offset : " + temporaryMessage.noteSource.startTimeOffset);
-                        Debug.Log("MS time of note relative to track start : " + Metronome.ppqToMs(temporaryMessage.getAbsTimeStamp()));
-                        Debug.Log("Current time : " + currentTime);
-                        Debug.Log("metro start time : " + metronomeStartTimeMs);
+                        //Debug.Log("<color=red>Error: negative event time offset : </color>" + msOffset + ", setting time to 0");
+                        //Debug.Log("source start time offset : " + temporaryMessage.noteSource.startTimeOffset);
+                        //Debug.Log("MS time of note relative to track start : " + Metronome.ppqToMs(temporaryMessage.getAbsTimeStamp()));
+                        //Debug.Log("Current time : " + currentTime);
+                        //Debug.Log("metro start time : " + metronomeStartTimeMs);
                         msOffset = 0;
                     }
                     

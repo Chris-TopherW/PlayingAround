@@ -46,8 +46,8 @@ public class MidiSource : MonoBehaviour {
     private void Play()
     {
         startTimeOffset = AudioSettings.dspTime * 1000; /*- MidiPlayer.getMetronomeStartTime()*/ //why the metronome offset?
-        Debug.Log("Offset: " + startTimeOffset);
-        Debug.Log("start time in ms: " + MidiPlayer.getMetronomeStartTime());
+        //Debug.Log("Offset: " + startTimeOffset);
+        //Debug.Log("start time in ms: " + MidiPlayer.getMetronomeStartTime());
         MidiPlayer.PlayTrack(midiFile.getMidiTrack(1), this);
         MidiPlayer.reorderQueue();
     }
@@ -57,7 +57,7 @@ public class MidiSource : MonoBehaviour {
         if(Loop)
         if (AudioSettings.dspTime * 1000 > startTimeOffset + Metronome.ppqToMs(midiFile.getMidiTrack(1).getTrackPPQLen()))
         {
-            Debug.Log("BANG!");
+            //Debug.Log("BANG!");
             startTimeOffset += Metronome.ppqToMs(midiFile.getMidiTrack(1).getTrackPPQLen());
             Play();
         }
