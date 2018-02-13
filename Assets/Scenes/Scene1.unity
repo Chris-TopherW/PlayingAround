@@ -554,7 +554,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &2120629447
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -569,7 +569,7 @@ MonoBehaviour:
   MidiClip: {fileID: 4900000, guid: 6ed2b91ec526cab438d05f53f143354a, type: 3}
   Mute: 0
   PlayOnAwake: 1
-  Loop: 0
+  Loop: 1
   ForceToChannel: 0
   Channel: 2
   startTimeOffset: 0

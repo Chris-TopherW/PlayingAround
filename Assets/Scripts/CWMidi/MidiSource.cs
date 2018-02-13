@@ -57,7 +57,6 @@ public class MidiSource : MonoBehaviour {
         if(Loop)
         if (AudioSettings.dspTime * 1000 > startTimeOffset + Metronome.ppqToMs(midiFile.getMidiTrack(1).getTrackPPQLen()))
         {
-            //Debug.Log("BANG!");
             startTimeOffset += Metronome.ppqToMs(midiFile.getMidiTrack(1).getTrackPPQLen());
             Play();
         }
