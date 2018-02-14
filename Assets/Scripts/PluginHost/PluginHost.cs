@@ -25,7 +25,8 @@ public class PluginHost : MonoBehaviour
     [DllImport("VSTHostUnity", EntryPoint = "startPlugin", CallingConvention = CallingConvention.Cdecl)]
     public static extern void startPlugin(/*AEffect *plugin*/);
     [DllImport("VSTHostUnity", EntryPoint = "cDebug", CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr cDebug();
+    public static extern String cDebug();
+
     [DllImport("VSTHostUnity", EntryPoint = "shutdown", CallingConvention = CallingConvention.Cdecl)]
     public static extern void shutdown();
     [DllImport("VSTHostUnity", EntryPoint = "start", CallingConvention = CallingConvention.Cdecl)]
@@ -78,21 +79,21 @@ public class PluginHost : MonoBehaviour
         debugString = new char[256];
     }
 
-
+    //need to update  dll end.
     private void Update()
     {
-        String debugMes = debug(cDebug());
+        String debugMes = cDebug();
         if(debugMes != "no message")
         {
             Debug.Log(debugMes);
         }
     }
 
-    private String debug(IntPtr ptr)
-    {
-        Marshal.Copy(ptr, debugString, 0, 256);
-        return new String(debugString);
-    }
+    //private String debug(IntPtr ptr)
+    //{
+    //    Marshal.Copy(ptr, debugString, 0, 256);
+    //    return new String(debugString);
+    //}
 
     void OnAudioFilterRead(float[] data, int channels)
     {

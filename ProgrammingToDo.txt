@@ -1,0 +1,13 @@
+To do:
+
+Fix adsr and parameter state in Juce
+Fix delay memory leak/ or maybe array overflow
+get char debug to work c to c#
+pass parameters from c to c# and make public vars in editor
+get plugins to load properly in c- debug will help a lot
+Fix or re-write loop logic in midi lib?
+Try to get bach to play properly in midi lib- could take a long time
+Work out how to send midi messages into plugin from my lib?
+
+Create chains of plugins, not just one per dll instance?
+Need to create re-sizable array of plugin instances in Cpp with certain info sent to and from C#?
