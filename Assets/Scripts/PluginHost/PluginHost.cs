@@ -25,13 +25,15 @@ public class PluginHost : MonoBehaviour
     [DllImport("VSTHostUnity", EntryPoint = "startPlugin", CallingConvention = CallingConvention.Cdecl)]
     public static extern void startPlugin(/*AEffect *plugin*/);
     [DllImport("VSTHostUnity", EntryPoint = "cDebug", CallingConvention = CallingConvention.Cdecl)]
-    public static extern String cDebug();
+    public static extern IntPtr cDebug();
+    [DllImport("VSTHostUnity", EntryPoint = "shutdown", CallingConvention = CallingConvention.Cdecl)]
+    public static extern void shutdown();
+    [DllImport("VSTHostUnity", EntryPoint = "start", CallingConvention = CallingConvention.Cdecl)]
+    public static extern void start();
 
 
     private float[][] inputArray;
-    float[] tempOutArr;
     //public int[] a;
-    //private int iterator = 0;
     private float[][] outputArray;
     public float[] squareWave;
     private int blockSize = 1024;
@@ -43,18 +45,24 @@ public class PluginHost : MonoBehaviour
     private double phase;
     private double sampling_frequency = 48000;
 
+    private int audioPtrSize;
+    private IntPtr inputArrayAsVoidPtr;
+    private int messagePtrSize;
+    private IntPtr messageAsVoidPtr;
+    private char[] debugString;
+
     void Start()
     {
         //TestSort(a, a.Length);
         
         setNumChannels(2);
         setBlockSize(blockSize);
-        loadPlugin(Application.dataPath + "/Assets/Data/JuceDemoPlugin.dll");
-        //configurePluginCallbacks();
-        
+        //loadPlugin(Application.dataPath + "/Assets/Data/JuceDemoPlugin.dll");
         initializeIO();
+        loadPlugin(Application.dataPath + "/Assets/Data/Reverb.dll");
+        //configurePluginCallbacks();
 
-        tempOutArr = new float[1024];
+        
 
         inputArray = new float[2][];
         inputArray[0] = new float[blockSize];
@@ -62,62 +70,62 @@ public class PluginHost : MonoBehaviour
         outputArray = new float[2][];
         outputArray[0] = new float[blockSize];
         outputArray[1] = new float[blockSize];
-        
+
+        audioPtrSize = Marshal.SizeOf(inputArray[0][0]) * inputArray[0].Length;
+        inputArrayAsVoidPtr = Marshal.AllocHGlobal(audioPtrSize);
+        messagePtrSize = 8 * 256;
+        messageAsVoidPtr = Marshal.AllocHGlobal(messagePtrSize);
+        debugString = new char[256];
     }
 
 
     private void Update()
     {
-        //String debug = cDebug();
-        //if (debug != "no message")
-        //{
-            //Debug.Log("c debug = " + debug);
-        //}
+        String debugMes = debug(cDebug());
+        if(debugMes != "no message")
+        {
+            Debug.Log(debugMes);
+        }
     }
 
+    private String debug(IntPtr ptr)
+    {
+        Marshal.Copy(ptr, debugString, 0, 256);
+        return new String(debugString);
+    }
 
     void OnAudioFilterRead(float[] data, int channels)
     {
+        //generate sine wave test tone
         increment = frequency * 2 * Math.PI / sampling_frequency;
         int j = 0;
         for (var i = 0; i < data.Length; i += channels)
         {
             phase = phase + increment;
             inputArray[0][j] = (float)(gain * Math.Sin(phase));
-            //data[i] = inputArray[0][j];
             if (channels == 2)
             {
                 inputArray[1][j] = inputArray[0][j];
-                //data[i + 1] = inputArray[1][j];
             }
             if (phase > 2 * Math.PI) phase = 0;
             j++;
         }
 
-        int size = Marshal.SizeOf(tempOutArr[0]) * tempOutArr.Length;
-        IntPtr tempPtr = Marshal.AllocHGlobal(size);
-        Marshal.Copy(inputArray[0], 0, tempPtr, 1024);
-        IntPtr buf = processAudio(tempPtr, 1024);
-        Marshal.Copy(buf, tempOutArr, 0, 1024);
+        //send audio to and from C using marshal for unmanaged code
+        Marshal.Copy(inputArray[0], 0, inputArrayAsVoidPtr, 1024);
+        IntPtr outputVoidPtr = processAudio(inputArrayAsVoidPtr, 1024);
+        Marshal.Copy(outputVoidPtr, inputArray[0], 0, 1024);
 
+        //copy buffer to data output
         j = 0;
         for (int i = 0; i < data.Length; i += channels)
         {
-            data[i] = tempOutArr[j];
+            data[i] = inputArray[0][j];
             if (channels == 2)
             {
                 data[i+1] = data[i];
             }
             j++;
         }
-    }
-
-    float[] procAudio(float[] input, long p_numFrames)
-    {
-        for(int i = 0; i < p_numFrames; i++)
-        {
-            tempOutArr[i] = input[i] * 0.5f;
-        }
-        return tempOutArr;
     }
 }
