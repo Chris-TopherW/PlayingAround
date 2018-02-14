@@ -9,9 +9,11 @@ public class PluginHost : MonoBehaviour
     public static extern void TestSort(int[] a, int length);
     [DllImport("VSTHostUnity", EntryPoint = "loadPlugin", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
     public static extern void loadPlugin(string filepath);
+    //[DllImport("VSTHostUnity", EntryPoint = "processAudio", CallingConvention = CallingConvention.Cdecl)]
+    //public static extern void processAudio(/*AEffect *plugin, */float[][] inputs, float[][] outputs,
+    //    long numFrames);
     [DllImport("VSTHostUnity", EntryPoint = "processAudio", CallingConvention = CallingConvention.Cdecl)]
-    public static extern void processAudio(/*AEffect *plugin, */float[][] inputs, float[][] outputs,
-        long numFrames);
+    public static extern IntPtr processAudio(IntPtr input, long numFrames);
     [DllImport("VSTHostUnity", EntryPoint = "setNumChannels", CallingConvention = CallingConvention.Cdecl)]
     public static extern void setNumChannels(int p_numChannels);
     [DllImport("VSTHostUnity", EntryPoint = "setBlockSize", CallingConvention = CallingConvention.Cdecl)]
@@ -27,8 +29,9 @@ public class PluginHost : MonoBehaviour
 
 
     private float[][] inputArray;
+    float[] tempOutArr;
     //public int[] a;
-    private int iterator = 0;
+    //private int iterator = 0;
     private float[][] outputArray;
     public float[] squareWave;
     private int blockSize = 1024;
@@ -50,7 +53,8 @@ public class PluginHost : MonoBehaviour
         //configurePluginCallbacks();
         
         initializeIO();
-        int f = 0;
+
+        tempOutArr = new float[1024];
 
         inputArray = new float[2][];
         inputArray[0] = new float[blockSize];
@@ -61,8 +65,6 @@ public class PluginHost : MonoBehaviour
         
     }
 
-    //processAudio(inputArray, outputArray, bufferSize);
-    //data = outputArray[0];
 
     private void Update()
     {
@@ -92,45 +94,30 @@ public class PluginHost : MonoBehaviour
             j++;
         }
 
-        j = 0;
-        for(int i = 0; i < data.Length; i+=channels)
-        {
-            outputArray[0][j] = inputArray[0][j];
-            if (channels == 2)
-            {
-                outputArray[1][j] = inputArray[1][j];
-            }
-            j++;
-        }
-
-        //getting runtime error here- seems to be wrong syntax sending 2d array to and from c. Try one D array tomorrow.
-        //processAudio(inputArray, outputArray, 1024);
+        int size = Marshal.SizeOf(tempOutArr[0]) * tempOutArr.Length;
+        IntPtr tempPtr = Marshal.AllocHGlobal(size);
+        Marshal.Copy(inputArray[0], 0, tempPtr, 1024);
+        IntPtr buf = processAudio(tempPtr, 1024);
+        Marshal.Copy(buf, tempOutArr, 0, 1024);
 
         j = 0;
         for (int i = 0; i < data.Length; i += channels)
         {
-            data[i] = outputArray[0][j];
+            data[i] = tempOutArr[j];
             if (channels == 2)
             {
-                data[i+1] = outputArray[1][j];
+                data[i+1] = data[i];
             }
             j++;
         }
-        //bufferSize = data.Length;
-        //chans = channels;
-        //processAudio(inputArray, outputArray, 1024);
-        //data = inputArray[0];
-        //outputArray = inputArray;
-        //j = 0;
-        //for (var i = 0; i < data.Length; i = i + channels)
-        //{
+    }
 
-        //    data[i] = outputArray[0][j];
-        //    if (channels == 2)
-        //    {
-        //        data[i + 1] = outputArray[0][j];
-        //    }
-        //}
-        //j = j + channels;
+    float[] procAudio(float[] input, long p_numFrames)
+    {
+        for(int i = 0; i < p_numFrames; i++)
+        {
+            tempOutArr[i] = input[i] * 0.5f;
+        }
+        return tempOutArr;
     }
 }
