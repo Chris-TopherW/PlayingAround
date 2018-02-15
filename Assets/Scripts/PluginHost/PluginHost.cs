@@ -8,7 +8,7 @@ public class PluginHost : MonoBehaviour
     [DllImport("VSTHostUnity", EntryPoint = "TestSort")]
     public static extern void TestSort(int[] a, int length);
     [DllImport("VSTHostUnity", EntryPoint = "loadPlugin", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-    public static extern void loadPlugin(string filepath);
+    public static extern void loadPlugin(/*string filepath*/);
     //[DllImport("VSTHostUnity", EntryPoint = "processAudio", CallingConvention = CallingConvention.Cdecl)]
     //public static extern void processAudio(/*AEffect *plugin, */float[][] inputs, float[][] outputs,
     //    long numFrames);
@@ -24,8 +24,11 @@ public class PluginHost : MonoBehaviour
     public static extern int configurePluginCallbacks(/*AEffect *plugin*/);
     [DllImport("VSTHostUnity", EntryPoint = "startPlugin", CallingConvention = CallingConvention.Cdecl)]
     public static extern void startPlugin(/*AEffect *plugin*/);
-    [DllImport("VSTHostUnity", EntryPoint = "cDebug", CallingConvention = CallingConvention.Cdecl)]
-    public static extern String cDebug();
+    //[DllImport("VSTHostUnity", EntryPoint = "cDebug", CallingConvention = CallingConvention.Cdecl)]
+    //public static extern String cDebug();
+
+    [DllImport("VSTHostUnity", EntryPoint = "cDebugDelegate", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+    public static extern String cDebugDelegate();
 
     [DllImport("VSTHostUnity", EntryPoint = "shutdown", CallingConvention = CallingConvention.Cdecl)]
     public static extern void shutdown();
@@ -60,10 +63,9 @@ public class PluginHost : MonoBehaviour
         setBlockSize(blockSize);
         //loadPlugin(Application.dataPath + "/Assets/Data/JuceDemoPlugin.dll");
         initializeIO();
-        loadPlugin(Application.dataPath + "/Assets/Data/Reverb.dll");
+        //sending char array is probably going weeeeird- had code for now
+        loadPlugin(/*Application.dataPath + "/Assets/Data/Reverb.dll"*/);
         //configurePluginCallbacks();
-
-        
 
         inputArray = new float[2][];
         inputArray[0] = new float[blockSize];
@@ -82,18 +84,13 @@ public class PluginHost : MonoBehaviour
     //need to update  dll end.
     private void Update()
     {
-        String debugMes = cDebug();
-        if(debugMes != "no message")
+        String debugMes = cDebugDelegate();
+        if (debugMes != "no message")
         {
             Debug.Log(debugMes);
         }
+        //Debug.Log(cDebugDelegate());
     }
-
-    //private String debug(IntPtr ptr)
-    //{
-    //    Marshal.Copy(ptr, debugString, 0, 256);
-    //    return new String(debugString);
-    //}
 
     void OnAudioFilterRead(float[] data, int channels)
     {
@@ -128,5 +125,11 @@ public class PluginHost : MonoBehaviour
             }
             j++;
         }
+    }
+    private void OnApplicationQuit()
+    {
+        //in editor dll loads into memory when scene is opened and unloads when unity closes... this is still a hack :(
+        if(!Application.isEditor)
+            shutdown();
     }
 }

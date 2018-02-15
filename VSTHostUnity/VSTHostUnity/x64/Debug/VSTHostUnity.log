@@ -1,0 +1,17 @@
+﻿  stdafx.cpp
+c:\audio\vst_sdk\vst2_sdk\pluginterfaces\vst2.x\aeffect.h(335): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.15063.0\ucrt\string.h(343): note: see declaration of 'strncpy'
+c:\audio\vst_sdk\vst2_sdk\pluginterfaces\vst2.x\aeffect.h(345): warning C4996: 'strncat': This function or variable may be unsafe. Consider using strncat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.15063.0\ucrt\string.h(271): note: see declaration of 'strncat'
+  dllmain.cpp
+c:\audio\vst_sdk\vst2_sdk\pluginterfaces\vst2.x\aeffect.h(335): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.15063.0\ucrt\string.h(343): note: see declaration of 'strncpy'
+c:\audio\vst_sdk\vst2_sdk\pluginterfaces\vst2.x\aeffect.h(345): warning C4996: 'strncat': This function or variable may be unsafe. Consider using strncat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.15063.0\ucrt\string.h(271): note: see declaration of 'strncat'
+  VSTHostUnity.cpp
+d:\plugindev\vsthostunity\vsthostunity\vsthostunity.cpp(154): warning C4018: '<': signed/unsigned mismatch
+d:\plugindev\vsthostunity\vsthostunity\vsthostunity.cpp(211): warning C4996: 'mbstowcs': This function or variable may be unsafe. Consider using mbstowcs_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.15063.0\ucrt\stdlib.h(931): note: see declaration of 'mbstowcs'
+d:\plugindev\vsthostunity\vsthostunity\vsthostunity.cpp(145): warning C4715: 'hostCallback': not all control paths return a value
+  VSTHostUnity.vcxproj -> D:\PluginDev\VSTHostUnity\x64\Debug\VSTHostUnity.dll
+  VSTHostUnity.vcxproj -> D:\PluginDev\VSTHostUnity\x64\Debug\VSTHostUnity.pdb (Partial PDB)
