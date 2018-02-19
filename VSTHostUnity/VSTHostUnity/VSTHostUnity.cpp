@@ -4,6 +4,7 @@
 #include "stdafx.h"
 #include <algorithm>
 #include <Objbase.h>
+#include <tchar.h>
 
 extern "C" {
 	float** inputs;
@@ -19,13 +20,15 @@ extern "C" {
 	void start()
 	{
 		debugMessage = (char*)malloc(sizeof(char) * 512);
-		initializeIO();
+		debugMessage = "no message";
+		//initializeIO();
 	}
 
 	void shutdown()
 	{
 		free(debugMessage);
 		free(pszReturn);
+		//free(wc);
 	}
 
 	float** getOutput()
@@ -61,10 +64,11 @@ extern "C" {
 
 
 	/*AEffect* */ void loadPlugin(/*char* path*/) {
-		char* path = "D:\\UnityProjects\\usingExternalCpp\\Assets\\Data\\Reverb.dll";
-		/*AEffect* */plugin = NULL;
-		const WCHAR *vstPath = GetWC(path);
-		HMODULE modulePtr = LoadLibrary(vstPath);
+		//wchar_t* path = L"D:\\UnityProjects\\usingExternalCpp\\Assets\\Data\\Reverb.dll";
+		///*AEffect* */plugin = NULL;
+		//const WCHAR *vstPath = GetWC(path);
+
+		HMODULE modulePtr = LoadLibrary(_T("C:\\Users\\chriswratt\\Documents\\UnityProjects\\UnityMidiLib\\VSTHostUnity\\VSTHostUnity\\TAL-Reverb-2.dll"));
 		if (modulePtr == NULL) {
 			debugMessage = "C: Failed trying to load VST";
 			//return NULL;
@@ -91,6 +95,10 @@ extern "C" {
 
 		// Create dispatcher handle
 		dispatcherFuncPtr dispatcher = (dispatcherFuncPtr)(plugin->dispatcher);
+		if (dispatcher == NULL)
+		{
+			debugMessage = "C: Dispatcher is NULL\n";
+		}
 
 		// Set up plugin callback functions
 		plugin->getParameter = (getParameterFuncPtr)plugin->getParameter;
@@ -111,7 +119,6 @@ extern "C" {
 		plugin->dispatcher(plugin, effSetBlockSize, 0, blocksize, NULL, 0.0f);
 
 		resumePlugin(/*plugin*/);
-		//was resume() but didn't know...
 	}
 
 
@@ -124,7 +131,7 @@ extern "C" {
 	}
 
 
-	bool canPluginDo(char *canDoString, AEffect *plugin) {
+	bool canPluginDo(char *canDoString) {
 		return (plugin->dispatcher(plugin, effCanDo, 0, 0, (void*)canDoString, 0.0f) > 0);
 	}
 
@@ -177,18 +184,19 @@ extern "C" {
 
 	//	//plugin->processReplacing(plugin, inputs, outputs, numFrames);
 	//}
-
+	 
 	float* processAudio(float* in, long numFrames)
 	{
-		inputs[0] = in;
+		//inputs[0] = in;
 		//plugin->processReplacing(plugin, inputs, outputs, numFrames);
-		outputs[0] = inputs[0];
-		for (int i = 0; i < numFrames; i++)
-		{
-			//outputHolder[i] = in[i];
-			outputHolder[i] = outputs[0][i];
-		}
-		return outputHolder;
+		inputs[0] = in;
+		//for (int i = 0; i < numFrames; i++)
+		//{
+		//	//outputHolder[i] = in[i];
+		//	outputHolder[i] = outputs[0][i];
+		//}
+		plugin->processReplacing(plugin, inputs, outputs, numFrames);
+		return outputs[0];
 	}
 
 	void silenceChannel(float **channelData, int numChannels, long numFrames) {
@@ -203,12 +211,15 @@ extern "C" {
 		plugin->dispatcher(plugin, effProcessEvents, 0, 0, events, 0.0f);
 	}
 
-	const wchar_t* GetWC(const char *c)
-	{
-		const size_t cSize = strlen(c) + 1;
-		wchar_t* wc = new wchar_t[cSize];
-		mbstowcs(wc, c, cSize);
+	//wchar_t* wc;
 
-		return wc;
-	}
+	//const wchar_t* GetWC(const char *c)
+	//{
+	//	const size_t cSize = strlen(c) + 1;
+	//	wc = new wchar_t[cSize];
+	//	mbstowcs(wc, c, cSize);
+
+	//	return wc;
+	//}
+
 }

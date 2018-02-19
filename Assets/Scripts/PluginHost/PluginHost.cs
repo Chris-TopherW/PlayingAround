@@ -24,9 +24,6 @@ public class PluginHost : MonoBehaviour
     public static extern int configurePluginCallbacks(/*AEffect *plugin*/);
     [DllImport("VSTHostUnity", EntryPoint = "startPlugin", CallingConvention = CallingConvention.Cdecl)]
     public static extern void startPlugin(/*AEffect *plugin*/);
-    //[DllImport("VSTHostUnity", EntryPoint = "cDebug", CallingConvention = CallingConvention.Cdecl)]
-    //public static extern String cDebug();
-
     [DllImport("VSTHostUnity", EntryPoint = "cDebugDelegate", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
     public static extern String cDebugDelegate();
 
@@ -42,7 +39,6 @@ public class PluginHost : MonoBehaviour
     public float[] squareWave;
     private int blockSize = 1024;
 
-
     public double frequency = 100;
     public double gain = 0.5;
     private double increment;
@@ -55,10 +51,14 @@ public class PluginHost : MonoBehaviour
     private IntPtr messageAsVoidPtr;
     private char[] debugString;
 
+    //[Range(-5.0f, 5.0f)]
+    private double sampleAudioOut;
+
     void Start()
     {
         //TestSort(a, a.Length);
-        
+
+        start();
         setNumChannels(2);
         setBlockSize(blockSize);
         //loadPlugin(Application.dataPath + "/Assets/Data/JuceDemoPlugin.dll");
@@ -66,6 +66,8 @@ public class PluginHost : MonoBehaviour
         //sending char array is probably going weeeeird- had code for now
         loadPlugin(/*Application.dataPath + "/Assets/Data/Reverb.dll"*/);
         //configurePluginCallbacks();
+        configurePluginCallbacks();
+        startPlugin();
 
         inputArray = new float[2][];
         inputArray[0] = new float[blockSize];
@@ -89,7 +91,6 @@ public class PluginHost : MonoBehaviour
         {
             Debug.Log(debugMes);
         }
-        //Debug.Log(cDebugDelegate());
     }
 
     void OnAudioFilterRead(float[] data, int channels)

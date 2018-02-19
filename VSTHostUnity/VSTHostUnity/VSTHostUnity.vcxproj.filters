@@ -36,4 +36,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Reverb.dll">
+      <Filter>Resource Files</Filter>
+    </None>
+  </ItemGroup>
 </Project>
