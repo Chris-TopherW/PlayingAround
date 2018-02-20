@@ -52,6 +52,14 @@ extern "C"
 	void addDebugMess(char* p_message);
 }
 
+//debugger
+extern "C"
+{
+	//Create a callback delegate
+	typedef void(*FuncCallBack)(const char* message, int color, int size);
+	static FuncCallBack callbackInstance = nullptr;
+	VSTEXPORT void RegisterDebugCallback(FuncCallBack cb);
+}
 
 
 // Plugin's entry point

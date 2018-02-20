@@ -1,5 +1,5 @@
 ﻿  VSTHostUnity.cpp
-c:\users\chriswratt\documents\unityprojects\unitymidilib\vsthostunity\vsthostunity\vsthostunity.cpp(160): warning C4018: '<': signed/unsigned mismatch
-c:\users\chriswratt\documents\unityprojects\unitymidilib\vsthostunity\vsthostunity\vsthostunity.cpp(151): warning C4715: 'hostCallback': not all control paths return a value
+c:\users\chriswratt\documents\unityprojects\unitymidilib\vsthostunity\vsthostunity\vsthostunity.cpp(132): warning C4018: '<': signed/unsigned mismatch
+c:\users\chriswratt\documents\unityprojects\unitymidilib\vsthostunity\vsthostunity\vsthostunity.cpp(127): warning C4715: 'hostCallback': not all control paths return a value
   VSTHostUnity.vcxproj -> C:\Users\chriswratt\Documents\UnityProjects\UnityMidiLib\VSTHostUnity\VSTHostUnity\x64\Debug\VSTHostUnity.dll
   VSTHostUnity.vcxproj -> C:\Users\chriswratt\Documents\UnityProjects\UnityMidiLib\VSTHostUnity\VSTHostUnity\x64\Debug\VSTHostUnity.pdb (Partial PDB)

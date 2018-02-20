@@ -5,13 +5,13 @@
 #include <algorithm>
 #include <Objbase.h>
 #include <tchar.h>
+#include "DebugCPP.h"
 
 extern "C" {
 	float** inputs;
 	float** outputs;
 	unsigned int numChannels = 2;
 	unsigned int blocksize = 1024;
-	char* debugMessage;
 	float outputHolder[1024];
 	char* pszReturn = NULL;
 	//hack in only one plugin for test purposes
@@ -19,14 +19,11 @@ extern "C" {
 
 	void start()
 	{
-		debugMessage = (char*)malloc(sizeof(char) * 512);
-		debugMessage = "no message";
-		//initializeIO();
+		Debug::Log("Dll started");
 	}
 
 	void shutdown()
 	{
-		free(debugMessage);
 		free(pszReturn);
 		//free(wc);
 	}
@@ -46,31 +43,14 @@ extern "C" {
 		numChannels = p_numChannels;
 	}
 
-	char* cDebugDelegate()
-	{
-		char* tempDebugMess = debugMessage;
-		char* test1 = tempDebugMess;
-		size_t stSize = strlen(test1) + sizeof(char);
-		pszReturn = NULL;
-		//should this be realloc? why am I reallocating every call...
-		pszReturn = (char*)::CoTaskMemAlloc(stSize);
-		// Copy the contents of test1
-		// to the memory pointed to by pszReturn.
-		strcpy_s(pszReturn, stSize, test1);
-
-		debugMessage = "no message";
-		return pszReturn;
-	}
-
-
 	/*AEffect* */ void loadPlugin(/*char* path*/) {
 		//wchar_t* path = L"D:\\UnityProjects\\usingExternalCpp\\Assets\\Data\\Reverb.dll";
 		///*AEffect* */plugin = NULL;
 		//const WCHAR *vstPath = GetWC(path);
 
-		HMODULE modulePtr = LoadLibrary(_T("C:\\Users\\chriswratt\\Documents\\UnityProjects\\UnityMidiLib\\VSTHostUnity\\VSTHostUnity\\TAL-Reverb-2.dll"));
+		HMODULE modulePtr = LoadLibrary(_T("C:\\Users\\chriswratt\\Documents\\UnityProjects\\UnityMidiLib\\VSTHostUnity\\VSTHostUnity\\SpaceshipDelay.dll"));
 		if (modulePtr == NULL) {
-			debugMessage = "C: Failed trying to load VST";
+			Debug::Log("C: Failed trying to load VST", Color::Black);
 			//return NULL;
 			plugin = NULL;
 			return;
@@ -89,7 +69,7 @@ extern "C" {
 		// If incorrect, then the file either was not loaded properly, is not a
 		// real VST plugin, or is otherwise corrupt.
 		if (plugin->magic != kEffectMagic) {
-			debugMessage = "C: Plugin's magic number is bad\n";
+			Debug::Log("C: Plugin's magic number is bad\n", Color::Black);
 			return -1;
 		}
 
@@ -97,7 +77,7 @@ extern "C" {
 		dispatcherFuncPtr dispatcher = (dispatcherFuncPtr)(plugin->dispatcher);
 		if (dispatcher == NULL)
 		{
-			debugMessage = "C: Dispatcher is NULL\n";
+			Debug::Log("C: dispatcher is NULL\n", Color::Black);
 		}
 
 		// Set up plugin callback functions
@@ -107,7 +87,6 @@ extern "C" {
 
 		return plugin->magic; //added 2/10. was just plugin...
 	}
-
 
 	void startPlugin(/*AEffect *plugin*/) {
 		plugin->dispatcher(plugin, effOpen, 0, 0, NULL, 0.0f);
@@ -121,7 +100,6 @@ extern "C" {
 		resumePlugin(/*plugin*/);
 	}
 
-
 	void resumePlugin(/*AEffect *plugin*/) {
 		plugin->dispatcher(plugin, effMainsChanged, 0, 1, NULL, 0.0f);
 	}
@@ -130,11 +108,9 @@ extern "C" {
 		plugin->dispatcher(plugin, effMainsChanged, 0, 0, NULL, 0.0f);
 	}
 
-
 	bool canPluginDo(char *canDoString) {
 		return (plugin->dispatcher(plugin, effCanDo, 0, 0, (void*)canDoString, 0.0f) > 0);
 	}
-
 
 	VstIntPtr VSTCALLBACK hostCallback(AEffect *effect, VstInt32 opcode, VstInt32 index,
 		VstIntPtr value, void *ptr, float opt) {
@@ -149,12 +125,8 @@ extern "C" {
 			break;
 		}
 	}
-
+	 
 	void initializeIO() {
-		// inputs and outputs are assumed to be float** and are declared elsewhere,
-		// most likely the are fields owned by this class. numChannels and blocksize
-		// are also fields, both should be size_t (or unsigned int, if you prefer).
-		//debugMessage = "C: initialiseIo";
 		inputs = (float**)malloc(sizeof(float**) * numChannels);
 		outputs = (float**)malloc(sizeof(float**) * numChannels);
 		for (int channel = 0; channel < numChannels; channel++) {
@@ -162,40 +134,19 @@ extern "C" {
 			outputs[channel] = (float*)malloc(sizeof(float*) * blocksize);
 		}
 	}
-
-	//void processAudio(/*AEffect *plugin,*/ float **inputs, float **outputs,
-	//	long numFrames) {
-	//	// Always reset the output array before processing.
-	//	//silenceChannel(outputs, numChannels, numFrames);
-
-	//	// Note: If you are processing an instrument, you should probably zero
-	//	// out the input channels first to avoid any accidental noise. If you
-	//	// are processing an effect, you should probably zero the values in the
-	//	// output channels. See the silenceChannel() function below.
-	//	// However, if you are reading input data from file (or elsewhere), this
-	//	// step is not necessary.
-	//	//silenceChannel(inputs, numChannels, numFrames);
-	//	for (int i = 0; i < numFrames; i++)
-	//	{
-	//		outputs[0][i] = inputs[0][i] * 0.5f;
-	//		outputs[1][i] = inputs[1][i] * 0.5f;
-	//		
-	//	}
-
-	//	//plugin->processReplacing(plugin, inputs, outputs, numFrames);
-	//}
 	 
 	float* processAudio(float* in, long numFrames)
 	{
 		//inputs[0] = in;
 		//plugin->processReplacing(plugin, inputs, outputs, numFrames);
 		inputs[0] = in;
-		//for (int i = 0; i < numFrames; i++)
-		//{
-		//	//outputHolder[i] = in[i];
-		//	outputHolder[i] = outputs[0][i];
-		//}
+		for (int i = 0; i < numFrames; i++)
+		{
+			inputs[0][i] = in[i] * 0.5f;
+		}
 		plugin->processReplacing(plugin, inputs, outputs, numFrames);
+		Debug::Log("Audio output at start of buffer = ");
+		Debug::Log(outputs[0][0]);
 		return outputs[0];
 	}
 

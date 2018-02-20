@@ -44,6 +44,7 @@ public class PluginHost : MonoBehaviour
     private double increment;
     private double phase;
     private double sampling_frequency = 48000;
+    private long incr = 0;
 
     private int audioPtrSize;
     private IntPtr inputArrayAsVoidPtr;
@@ -86,28 +87,39 @@ public class PluginHost : MonoBehaviour
     //need to update  dll end.
     private void Update()
     {
-        String debugMes = cDebugDelegate();
-        if (debugMes != "no message")
-        {
-            Debug.Log(debugMes);
-        }
     }
 
     void OnAudioFilterRead(float[] data, int channels)
     {
-        //generate sine wave test tone
-        increment = frequency * 2 * Math.PI / sampling_frequency;
         int j = 0;
-        for (var i = 0; i < data.Length; i += channels)
-        {
-            phase = phase + increment;
-            inputArray[0][j] = (float)(gain * Math.Sin(phase));
-            if (channels == 2)
-            {
-                inputArray[1][j] = inputArray[0][j];
-            }
-            if (phase > 2 * Math.PI) phase = 0;
+
+        //sine wave
+        //increment = frequency * 2 * Math.PI / sampling_frequency;
+        //for (var i = 0; i < data.Length; i += channels)
+        //{
+        //    phase = phase + increment;
+        //    inputArray[0][j] = (float)(gain * Math.Sin(phase));
+        //    if (channels == 2)
+        //    {
+        //        inputArray[1][j] = inputArray[0][j];
+        //    }
+        //    if (phase > 2 * Math.PI) phase = 0;
+        //    j++;
+        //}
+
+        //clicks every second
+        for (int i = 2; i < data.Length; i += channels)
+        { 
+            inputArray[0][j] = 0.0f;
+            inputArray[0][j + 1] = 0.0f;
             j++;
+            incr++;
+        }
+        if (incr > 44100)
+        {
+            inputArray[0][0] = 1.0f;
+            inputArray[0][1] = 1.0f;
+            incr -= 44100;
         }
 
         //send audio to and from C using marshal for unmanaged code
