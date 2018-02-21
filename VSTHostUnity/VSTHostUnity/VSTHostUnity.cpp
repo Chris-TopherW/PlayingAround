@@ -14,23 +14,25 @@ extern "C" {
 	unsigned int blocksize = 1024;
 	float outputHolder[1024];
 	char* pszReturn = NULL;
+	wchar_t* wc;
 	//hack in only one plugin for test purposes
 	AEffect* plugin = NULL;
 
 	void start()
 	{
-		Debug::Log("Dll started");
 	}
 
 	void shutdown()
 	{
 		free(pszReturn);
-		//free(wc);
-	}
-
-	float** getOutput()
-	{
-		return outputs; 
+		free(wc);
+		for (int i = 0; i < numChannels; i++)
+		{
+			free(inputs[i]);
+			free(outputs[i]);
+		}
+		free(inputs);
+		free(outputs);
 	}
 
 	void setBlockSize(int p_blocksize)
@@ -47,8 +49,12 @@ extern "C" {
 		//wchar_t* path = L"D:\\UnityProjects\\usingExternalCpp\\Assets\\Data\\Reverb.dll";
 		///*AEffect* */plugin = NULL;
 		//const WCHAR *vstPath = GetWC(path);
-
-		HMODULE modulePtr = LoadLibrary(_T("C:\\Users\\chriswratt\\Documents\\UnityProjects\\UnityMidiLib\\VSTHostUnity\\VSTHostUnity\\SpaceshipDelay.dll"));
+		 
+		//need to stop application from crashing if null
+		char* pluginPath = "C:\\Program Files\\Steinberg\\VSTPlugins\\SpaceshipDelay.dll";
+		HMODULE modulePtr = LoadLibrary(GetWC(pluginPath));
+		//HMODULE modulePtr = LoadLibrary(_T("C:\\Users\\chriswratt\\Documents\\UnityProjects\\UnityMidiLib\\VSTHostUnity\\VSTHostUnity\\brandulator.dll"));
+		
 		if (modulePtr == NULL) {
 			Debug::Log("C: Failed trying to load VST", Color::Black);
 			//return NULL;
@@ -59,7 +65,12 @@ extern "C" {
 		vstPluginFuncPtr mainEntryPoint =
 			(vstPluginFuncPtr)GetProcAddress(modulePtr, "VSTPluginMain");
 		// Instantiate the plugin
+		//need to look deep into host callback function- I think this is where the error is coming from...
 		plugin = mainEntryPoint(hostCallback); //for some reason this totally breaks in 64 bit build!
+		if (plugin == NULL)
+		{
+			Debug::Log("Error, falied to instantiate plugin");
+		}
 		//return plugin;
 		return;
 	}
@@ -68,6 +79,11 @@ extern "C" {
 		// Check plugin's magic number
 		// If incorrect, then the file either was not loaded properly, is not a
 		// real VST plugin, or is otherwise corrupt.
+		if (plugin == NULL)
+		{
+			Debug::Log("Error, no plugin");
+			return 0;
+		}
 		if (plugin->magic != kEffectMagic) {
 			Debug::Log("C: Plugin's magic number is bad\n", Color::Black);
 			return -1;
@@ -88,7 +104,27 @@ extern "C" {
 		return plugin->magic; //added 2/10. was just plugin...
 	}
 
+	int getNumParams()
+	{
+		if (plugin == NULL)
+		{
+			Debug::Log("Error, no plugin");
+			return 0;
+		}
+		return plugin->numParams;
+	}
+
+	void setParam(int paramIndex, float p_value)
+	{
+		plugin->setParameter(plugin, paramIndex, p_value);
+	}
+
 	void startPlugin(/*AEffect *plugin*/) {
+		if (plugin == NULL)
+		{
+			Debug::Log("Error, no plugin in startPlugin()");
+			return;
+		}
 		plugin->dispatcher(plugin, effOpen, 0, 0, NULL, 0.0f);
 
 		// Set some default properties
@@ -101,19 +137,39 @@ extern "C" {
 	}
 
 	void resumePlugin(/*AEffect *plugin*/) {
+		if (plugin == NULL)
+		{
+			Debug::Log("Error, no plugin in resumePlugin()");
+			return;
+		}
 		plugin->dispatcher(plugin, effMainsChanged, 0, 1, NULL, 0.0f);
 	}
 
 	void suspendPlugin(/*AEffect *plugin*/) {
+		if (plugin == NULL)
+		{
+			Debug::Log("Error, no plugin in suspendPlugin()");
+			return;
+		}
 		plugin->dispatcher(plugin, effMainsChanged, 0, 0, NULL, 0.0f);
 	}
 
 	bool canPluginDo(char *canDoString) {
+		if (plugin == NULL)
+		{
+			Debug::Log("Error, no plugin in canPluginDo()");
+			return false;
+		}
 		return (plugin->dispatcher(plugin, effCanDo, 0, 0, (void*)canDoString, 0.0f) > 0);
 	}
 
 	VstIntPtr VSTCALLBACK hostCallback(AEffect *effect, VstInt32 opcode, VstInt32 index,
 		VstIntPtr value, void *ptr, float opt) {
+		if (plugin == NULL)
+		{
+			Debug::Log("Error, no plugin in hostCallback");
+			return NULL;
+		}
 		switch (opcode) {
 		case audioMasterVersion:
 			return 2400;
@@ -137,6 +193,7 @@ extern "C" {
 	 
 	float* processAudio(float* in, long numFrames)
 	{
+		if (plugin == NULL) return NULL; 
 		//inputs[0] = in;
 		//plugin->processReplacing(plugin, inputs, outputs, numFrames);
 		inputs[0] = in;
@@ -159,18 +216,21 @@ extern "C" {
 	}
 
 	void processMidi(/*AEffect *plugin, */VstEvents *events) {
+		if (plugin == NULL) return;
 		plugin->dispatcher(plugin, effProcessEvents, 0, 0, events, 0.0f);
 	}
 
-	//wchar_t* wc;
+	const wchar_t* GetWC(const char *c)
+	{
+		const size_t cSize = strlen(c) + 1;
+		if (wc != nullptr)
+		{
+			delete(wc);
+		}
+		
+		wc = new wchar_t[cSize];
+		mbstowcs(wc, c, cSize);
 
-	//const wchar_t* GetWC(const char *c)
-	//{
-	//	const size_t cSize = strlen(c) + 1;
-	//	wc = new wchar_t[cSize];
-	//	mbstowcs(wc, c, cSize);
-
-	//	return wc;
-	//}
-
+		return wc;
+	}
 }

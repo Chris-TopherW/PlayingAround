@@ -4,14 +4,8 @@ using System;
 
 public class PluginHost : MonoBehaviour
 {
-    // The imported function
-    [DllImport("VSTHostUnity", EntryPoint = "TestSort")]
-    public static extern void TestSort(int[] a, int length);
     [DllImport("VSTHostUnity", EntryPoint = "loadPlugin", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
     public static extern void loadPlugin(/*string filepath*/);
-    //[DllImport("VSTHostUnity", EntryPoint = "processAudio", CallingConvention = CallingConvention.Cdecl)]
-    //public static extern void processAudio(/*AEffect *plugin, */float[][] inputs, float[][] outputs,
-    //    long numFrames);
     [DllImport("VSTHostUnity", EntryPoint = "processAudio", CallingConvention = CallingConvention.Cdecl)]
     public static extern IntPtr processAudio(IntPtr input, long numFrames);
     [DllImport("VSTHostUnity", EntryPoint = "setNumChannels", CallingConvention = CallingConvention.Cdecl)]
@@ -24,27 +18,26 @@ public class PluginHost : MonoBehaviour
     public static extern int configurePluginCallbacks(/*AEffect *plugin*/);
     [DllImport("VSTHostUnity", EntryPoint = "startPlugin", CallingConvention = CallingConvention.Cdecl)]
     public static extern void startPlugin(/*AEffect *plugin*/);
-    [DllImport("VSTHostUnity", EntryPoint = "cDebugDelegate", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-    public static extern String cDebugDelegate();
-
     [DllImport("VSTHostUnity", EntryPoint = "shutdown", CallingConvention = CallingConvention.Cdecl)]
     public static extern void shutdown();
     [DllImport("VSTHostUnity", EntryPoint = "start", CallingConvention = CallingConvention.Cdecl)]
     public static extern void start();
-
-
-    private float[][] inputArray;
-    //public int[] a;
-    private float[][] outputArray;
-    public float[] squareWave;
-    private int blockSize = 1024;
+    [DllImport("VSTHostUnity", EntryPoint = "getNumParams", CallingConvention = CallingConvention.Cdecl)]
+    public static extern int getNumParams();
+    [DllImport("VSTHostUnity", EntryPoint = "setParam", CallingConvention = CallingConvention.Cdecl)]
+    public static extern void setParam(int paramIndex, float p_value);
 
     public double frequency = 100;
     public double gain = 0.5;
-    private double increment;
+    public int numParams;
+    public float[] parameters;
+
+    private float[][] inputArray;
+    private float[][] outputArray;
+    private int blockSize = 1024;
+    private double increment = 0.0;
     private double phase;
     private double sampling_frequency = 48000;
-    private long incr = 0;
 
     private int audioPtrSize;
     private IntPtr inputArrayAsVoidPtr;
@@ -52,24 +45,23 @@ public class PluginHost : MonoBehaviour
     private IntPtr messageAsVoidPtr;
     private char[] debugString;
 
-    //[Range(-5.0f, 5.0f)]
+    [Range(-1.1f, 1.1f)]
     private double sampleAudioOut;
+
+    private void Awake()
+    {
+        setNumChannels(2);
+        setBlockSize(blockSize);
+        initializeIO();
+        loadPlugin();
+        configurePluginCallbacks();
+        startPlugin();
+        numParams = getNumParams();
+        updateParameters();
+    }
 
     void Start()
     {
-        //TestSort(a, a.Length);
-
-        start();
-        setNumChannels(2);
-        setBlockSize(blockSize);
-        //loadPlugin(Application.dataPath + "/Assets/Data/JuceDemoPlugin.dll");
-        initializeIO();
-        //sending char array is probably going weeeeird- had code for now
-        loadPlugin(/*Application.dataPath + "/Assets/Data/Reverb.dll"*/);
-        //configurePluginCallbacks();
-        configurePluginCallbacks();
-        startPlugin();
-
         inputArray = new float[2][];
         inputArray[0] = new float[blockSize];
         inputArray[1] = new float[blockSize];
@@ -87,6 +79,7 @@ public class PluginHost : MonoBehaviour
     //need to update  dll end.
     private void Update()
     {
+        
     }
 
     void OnAudioFilterRead(float[] data, int channels)
@@ -113,13 +106,13 @@ public class PluginHost : MonoBehaviour
             inputArray[0][j] = 0.0f;
             inputArray[0][j + 1] = 0.0f;
             j++;
-            incr++;
+            increment++;
         }
-        if (incr > 44100)
+        if (increment > 44100)
         {
             inputArray[0][0] = 1.0f;
             inputArray[0][1] = 1.0f;
-            incr -= 44100;
+            increment -= 44100;
         }
 
         //send audio to and from C using marshal for unmanaged code
@@ -144,5 +137,13 @@ public class PluginHost : MonoBehaviour
         //in editor dll loads into memory when scene is opened and unloads when unity closes... this is still a hack :(
         if(!Application.isEditor)
             shutdown();
+    }
+
+    private void updateParameters()
+    {
+        for (int i = 0; i < numParams; i++)
+        {
+            setParam(i, parameters[i]);
+        }
     }
 }

@@ -425,9 +425,50 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f875a57a1929538419e12b0b211d63b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  squareWave: []
   frequency: 100
   gain: 0.5
+  numParams: 0
+  parameters:
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 11
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
 --- !u!4 &1307868302
 Transform:
   m_ObjectHideFlags: 0

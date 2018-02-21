@@ -23,33 +23,25 @@
 
 extern "C"
 {
-	VSTEXPORT float** getOutput();
+	const wchar_t* GetWC(const char *c);
 	VSTEXPORT void setBlockSize(int p_blocksize);
 	VSTEXPORT void setNumChannels(int p_numChannels);
 	// Main host callback
 	VstIntPtr VSTCALLBACK hostCallback(AEffect *effect, VstInt32 opcode, VstInt32 index,
 		VstIntPtr value, void *ptr, float opt);
-
-	const wchar_t* GetWC(const char *c);
 	VSTEXPORT /*AEffect* */ void loadPlugin(/*char* path*/);
 	VSTEXPORT int configurePluginCallbacks(/*AEffect *plugin*/);
 	VSTEXPORT void startPlugin(/*AEffect *plugin*/);
 	VSTEXPORT void resumePlugin(/*AEffect *plugin*/);
 	VSTEXPORT void suspendPlugin(/*AEffect *plugin*/);
-	//VstIntPtr VSTCALLBACK hostCallback(AEffect *effect, VstIntPtr opcode, VstIntPtr index,
-	//	VstIntPtr value, void *ptr, float opt);
+	VSTEXPORT int getNumParams();
+	VSTEXPORT void setParam(int paramIndex, float p_value);
 	VSTEXPORT void initializeIO();
-	//VSTEXPORT void processAudio(/*AEffect *plugin, */float **inputs, float **outputs,
-	//	long numFrames);
 	VSTEXPORT float* processAudio(float* in, long numFrames);
 	VSTEXPORT void silenceChannel(float **channelData, int numChannels, long numFrames);
 	VSTEXPORT void processMidi(/*AEffect *plugin, */VstEvents *events);
-	VSTEXPORT char* cDebugDelegate();
-
 	VSTEXPORT void shutdown();
 	VSTEXPORT void start();
-
-	void addDebugMess(char* p_message);
 }
 
 //debugger
