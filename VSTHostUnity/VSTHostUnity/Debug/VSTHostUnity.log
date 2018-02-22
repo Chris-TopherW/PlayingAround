@@ -3,17 +3,12 @@ c:\audio\vst_sdk\vst2_sdk\pluginterfaces\vst2.x\aeffect.h(335): warning C4996: '
   c:\program files (x86)\windows kits\10\include\10.0.15063.0\ucrt\string.h(343): note: see declaration of 'strncpy'
 c:\audio\vst_sdk\vst2_sdk\pluginterfaces\vst2.x\aeffect.h(345): warning C4996: 'strncat': This function or variable may be unsafe. Consider using strncat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.15063.0\ucrt\string.h(271): note: see declaration of 'strncat'
-  Skipping... (no relevant changes detected)
-  dllmain.cpp
   VSTHostUnity.cpp
-d:\plugindev\vsthostunity\vsthostunity\vsthostunity.cpp(24): warning C4477: 'printf' : format string '%s' requires an argument of type 'char *', but variadic argument 1 has type 'const WCHAR *'
-  d:\plugindev\vsthostunity\vsthostunity\vsthostunity.cpp(24): note: consider using '%ls' in the format string
-  d:\plugindev\vsthostunity\vsthostunity\vsthostunity.cpp(24): note: consider using '%lls' in the format string
-  d:\plugindev\vsthostunity\vsthostunity\vsthostunity.cpp(24): note: consider using '%Ls' in the format string
-  d:\plugindev\vsthostunity\vsthostunity\vsthostunity.cpp(24): note: consider using '%ws' in the format string
-d:\plugindev\vsthostunity\vsthostunity\vsthostunity.cpp(109): warning C4018: '<': signed/unsigned mismatch
-d:\plugindev\vsthostunity\vsthostunity\vsthostunity.cpp(147): warning C4996: 'mbstowcs': This function or variable may be unsafe. Consider using mbstowcs_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+d:\unityprojects\usingexternalcpp\vsthostunity\vsthostunity\vsthostunity.cpp(29): warning C4018: '<': signed/unsigned mismatch
+d:\unityprojects\usingexternalcpp\vsthostunity\vsthostunity\vsthostunity.cpp(200): warning C4018: '<': signed/unsigned mismatch
+d:\unityprojects\usingexternalcpp\vsthostunity\vsthostunity\vsthostunity.cpp(243): warning C4996: 'mbstowcs': This function or variable may be unsafe. Consider using mbstowcs_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.15063.0\ucrt\stdlib.h(931): note: see declaration of 'mbstowcs'
-d:\plugindev\vsthostunity\vsthostunity\vsthostunity.cpp(100): warning C4715: 'hostCallback': not all control paths return a value
-  VSTHostUnity.vcxproj -> D:\PluginDev\VSTHostUnity\Debug\VSTHostUnity.dll
-  VSTHostUnity.vcxproj -> D:\PluginDev\VSTHostUnity\Debug\VSTHostUnity.pdb (Partial PDB)
+  DebugCPP.cpp
+d:\unityprojects\usingexternalcpp\vsthostunity\vsthostunity\debugcpp.cpp(62): fatal error C1010: unexpected end of file while looking for precompiled header. Did you forget to add '#include "stdafx.h"' to your source?
+  Generating Code...
+d:\unityprojects\usingexternalcpp\vsthostunity\vsthostunity\vsthostunity.cpp(195): warning C4715: 'hostCallback': not all control paths return a value

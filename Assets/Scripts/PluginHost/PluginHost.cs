@@ -26,6 +26,8 @@ public class PluginHost : MonoBehaviour
     public static extern int getNumParams();
     [DllImport("VSTHostUnity", EntryPoint = "setParam", CallingConvention = CallingConvention.Cdecl)]
     public static extern void setParam(int paramIndex, float p_value);
+    [DllImport("VSTHostUnity", EntryPoint = "processBlock", CallingConvention = CallingConvention.Cdecl)]
+    public static extern void processBlock();
 
     public double frequency = 100;
     public double gain = 0.5;
@@ -44,6 +46,7 @@ public class PluginHost : MonoBehaviour
     private int messagePtrSize;
     private IntPtr messageAsVoidPtr;
     private char[] debugString;
+    private bool ready = false;
 
     [Range(-1.1f, 1.1f)]
     private double sampleAudioOut;
@@ -56,12 +59,15 @@ public class PluginHost : MonoBehaviour
         loadPlugin();
         configurePluginCallbacks();
         startPlugin();
+        
         numParams = getNumParams();
-        updateParameters();
+        //updateParameters();
+        ready = true;
     }
 
     void Start()
     {
+        //processBlock(); //this is a debug- will crash if C's processReplacing stuffs up
         inputArray = new float[2][];
         inputArray[0] = new float[blockSize];
         inputArray[1] = new float[blockSize];
@@ -74,6 +80,7 @@ public class PluginHost : MonoBehaviour
         messagePtrSize = 8 * 256;
         messageAsVoidPtr = Marshal.AllocHGlobal(messagePtrSize);
         debugString = new char[256];
+        
     }
 
     //need to update  dll end.
@@ -84,6 +91,9 @@ public class PluginHost : MonoBehaviour
 
     void OnAudioFilterRead(float[] data, int channels)
     {
+        if(!ready)
+            return;
+
         int j = 0;
 
         //sine wave
@@ -139,11 +149,11 @@ public class PluginHost : MonoBehaviour
             shutdown();
     }
 
-    private void updateParameters()
-    {
-        for (int i = 0; i < numParams; i++)
-        {
-            setParam(i, parameters[i]);
-        }
-    }
+    //private void updateParameters()
+    //{
+    //    for (int i = 0; i < numParams; i++)
+    //    {
+    //        setParam(i, parameters[i]);
+    //    }
+    //}
 }

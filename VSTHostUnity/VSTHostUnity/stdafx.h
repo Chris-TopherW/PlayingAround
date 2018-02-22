@@ -42,6 +42,7 @@ extern "C"
 	VSTEXPORT void processMidi(/*AEffect *plugin, */VstEvents *events);
 	VSTEXPORT void shutdown();
 	VSTEXPORT void start();
+	VSTEXPORT void processBlock();
 }
 
 //debugger

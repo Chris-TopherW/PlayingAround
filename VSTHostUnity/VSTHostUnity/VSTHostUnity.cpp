@@ -24,6 +24,7 @@ extern "C" {
 
 	void shutdown()
 	{
+		plugin->dispatcher(plugin, effMainsChanged, 0, 0, NULL, 0.0f);
 		free(pszReturn);
 		free(wc);
 		for (int i = 0; i < numChannels; i++)
@@ -46,26 +47,40 @@ extern "C" {
 	}
 
 	/*AEffect* */ void loadPlugin(/*char* path*/) {
-		//wchar_t* path = L"D:\\UnityProjects\\usingExternalCpp\\Assets\\Data\\Reverb.dll";
-		///*AEffect* */plugin = NULL;
-		//const WCHAR *vstPath = GetWC(path);
-		 
-		//need to stop application from crashing if null
-		char* pluginPath = "C:\\Program Files\\Steinberg\\VSTPlugins\\SpaceshipDelay.dll";
-		HMODULE modulePtr = LoadLibrary(GetWC(pluginPath));
-		//HMODULE modulePtr = LoadLibrary(_T("C:\\Users\\chriswratt\\Documents\\UnityProjects\\UnityMidiLib\\VSTHostUnity\\VSTHostUnity\\brandulator.dll"));
-		
-		if (modulePtr == NULL) {
+
+		//HMODULE modulePtr = LoadLibrary(_T("C:\\Users\\chriswratt\\Documents\\UnityProjects\\UnityMidiLib\\VSTHostUnity\\VSTHostUnity\\TAL-Reverb-2.dll"));
+		HMODULE modulePtr = LoadLibrary(_T("D:\\UnityProjects\\usingExternalCpp\\VSTHostUnity\\VSTHostUnity\\Reverb.dll"));
+
+		vstPluginFuncPtr mainEntryPoint;
+		if (modulePtr) {
+			mainEntryPoint = (vstPluginFuncPtr)GetProcAddress(modulePtr, "VSTPluginMain");
+			if (!mainEntryPoint)
+			{
+				Debug::Log("VSTPluginMain is null");
+			}
+			if (!mainEntryPoint) {
+				mainEntryPoint = (vstPluginFuncPtr)GetProcAddress(modulePtr, "VstPluginMain()");
+			}
+			if (!mainEntryPoint)
+			{
+				Debug::Log("VstPluginMain() is null");
+			}
+			if (!mainEntryPoint) {
+				mainEntryPoint = (vstPluginFuncPtr)GetProcAddress(modulePtr, "main");
+			}
+			if (!mainEntryPoint)
+			{
+				Debug::Log("main is null");
+			}
+		}
+		else
+		{
 			Debug::Log("C: Failed trying to load VST", Color::Black);
 			//return NULL;
 			plugin = NULL;
 			return;
 		}
 
-		vstPluginFuncPtr mainEntryPoint =
-			(vstPluginFuncPtr)GetProcAddress(modulePtr, "VSTPluginMain");
-		// Instantiate the plugin
-		//need to look deep into host callback function- I think this is where the error is coming from...
 		plugin = mainEntryPoint(hostCallback); //for some reason this totally breaks in 64 bit build!
 		if (plugin == NULL)
 		{
@@ -132,8 +147,36 @@ extern "C" {
 		plugin->dispatcher(plugin, effSetSampleRate, 0, 0, NULL, sampleRate);
 		//int blocksize = 512;
 		plugin->dispatcher(plugin, effSetBlockSize, 0, blocksize, NULL, 0.0f);
-
+		//plugin->dispatcher(plugin, effSet)
 		resumePlugin(/*plugin*/);
+
+
+		silenceChannel(inputs, numChannels, blocksize);
+		silenceChannel(outputs, numChannels, blocksize);
+
+
+		Debug::Log("About to get into processBlock");
+		Debug::Log("inputs ptr size: ");
+		Debug::Log((int)sizeof(inputs));
+		Debug::Log("inputs[0] size: ");
+		Debug::Log((int)sizeof(inputs[0]));
+		Debug::Log("input[1] size: ");
+		Debug::Log((int)sizeof(inputs[1]));
+		Debug::Log("outputs ptr size: ");
+		Debug::Log((int)sizeof(outputs));
+		Debug::Log("outputs[0] size: ");
+		Debug::Log((int)sizeof(outputs[0]));
+		Debug::Log("outputs[1] size: ");
+		Debug::Log((int)sizeof(outputs[1]));
+		Debug::Log("blocksize: ");
+		Debug::Log((int)blocksize);
+		Debug::Log("Plugin pointer location lolol: ");
+		Debug::Log((int)plugin);
+	}
+
+	void processBlock()
+	{
+		plugin->processReplacing(plugin, inputs, outputs, blocksize);
 	}
 
 	void resumePlugin(/*AEffect *plugin*/) {
@@ -165,11 +208,8 @@ extern "C" {
 
 	VstIntPtr VSTCALLBACK hostCallback(AEffect *effect, VstInt32 opcode, VstInt32 index,
 		VstIntPtr value, void *ptr, float opt) {
-		if (plugin == NULL)
-		{
-			Debug::Log("Error, no plugin in hostCallback");
-			return NULL;
-		}
+		Debug::Log("Opcode = ");
+		Debug::Log(opcode);
 		switch (opcode) {
 		case audioMasterVersion:
 			return 2400;
@@ -183,27 +223,23 @@ extern "C" {
 	}
 	 
 	void initializeIO() {
-		inputs = (float**)malloc(sizeof(float**) * numChannels);
+		inputs = (float**)malloc(sizeof(float**) * numChannels); //2*8+(1024*4*2)
 		outputs = (float**)malloc(sizeof(float**) * numChannels);
 		for (int channel = 0; channel < numChannels; channel++) {
-			inputs[channel] = (float*)malloc(sizeof(float*) * blocksize);
-			outputs[channel] = (float*)malloc(sizeof(float*) * blocksize);
+			inputs[channel] = (float*)malloc(sizeof(float) * blocksize);
+			outputs[channel] = (float*)malloc(sizeof(float) * blocksize);
 		}
 	}
-	 
+	
 	float* processAudio(float* in, long numFrames)
 	{
-		if (plugin == NULL) return NULL; 
+		silenceChannel(inputs, numChannels, numFrames);
+		silenceChannel(outputs, numChannels, numFrames);
 		//inputs[0] = in;
+		outputs[0] = inputs[0];
+		
 		//plugin->processReplacing(plugin, inputs, outputs, numFrames);
-		inputs[0] = in;
-		for (int i = 0; i < numFrames; i++)
-		{
-			inputs[0][i] = in[i] * 0.5f;
-		}
-		plugin->processReplacing(plugin, inputs, outputs, numFrames);
-		Debug::Log("Audio output at start of buffer = ");
-		Debug::Log(outputs[0][0]);
+		//plugin->__processDeprecated(plugin, inputs, outputs, numFrames);
 		return outputs[0];
 	}
 
@@ -227,7 +263,6 @@ extern "C" {
 		{
 			delete(wc);
 		}
-		
 		wc = new wchar_t[cSize];
 		mbstowcs(wc, c, cSize);
 
