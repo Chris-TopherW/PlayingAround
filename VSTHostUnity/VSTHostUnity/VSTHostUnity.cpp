@@ -48,8 +48,8 @@ extern "C" {
 
 	/*AEffect* */ void loadPlugin(/*char* path*/) {
 
-		//HMODULE modulePtr = LoadLibrary(_T("C:\\Users\\chriswratt\\Documents\\UnityProjects\\UnityMidiLib\\VSTHostUnity\\VSTHostUnity\\TAL-Reverb-2.dll"));
-		HMODULE modulePtr = LoadLibrary(_T("D:\\UnityProjects\\usingExternalCpp\\VSTHostUnity\\VSTHostUnity\\Reverb.dll"));
+		HMODULE modulePtr = LoadLibrary(_T("C:\\Users\\chriswratt\\Documents\\UnityProjects\\UnityMidiLib\\VSTHostUnity\\VSTHostUnity\\TAL-Reverb-2.dll"));
+		//HMODULE modulePtr = LoadLibrary(_T("D:\\UnityProjects\\usingExternalCpp\\VSTHostUnity\\VSTHostUnity\\Reverb.dll"));
 
 		vstPluginFuncPtr mainEntryPoint;
 		if (modulePtr) {
@@ -176,7 +176,57 @@ extern "C" {
 
 	void processBlock()
 	{
-		plugin->processReplacing(plugin, inputs, outputs, blocksize);
+		//plugin->processReplacing(plugin, inputs, outputs, blocksize);
+		//cout << "Running process block. Out pos 0 is: " << outputs[0][0] << endl;
+
+		Debug::Log("Num inputs in plugin = ");
+		Debug::Log(plugin->numInputs);
+		Debug::Log("Num outputs in plugin = ");
+		Debug::Log(plugin->numOutputs);
+
+		float** testArray = (float**)malloc(sizeof(float*) * plugin->numInputs);
+		float** testOutArray = (float**)malloc(sizeof(float*) * plugin->numOutputs);
+		int block = 1024;
+		for (int i = 0; i < plugin->numInputs; i++)
+		{
+			testArray[i] = (float*)malloc(sizeof(float) * blocksize);
+		}
+		for (int i = 0; i < plugin->numOutputs; i++)
+		{
+			testOutArray[i] = (float*)malloc(sizeof(float) * blocksize);
+		}
+
+		for (int chan = 0; chan < plugin->numInputs; chan++)
+		{
+			for (int i = 0; i < block; i++)
+			{
+				testArray[chan][i] = 0.0f;
+			}
+		}
+		for (int chan = 0; chan < plugin->numOutputs; chan++)
+		{
+			for (int i = 0; i < block; i++)
+			{
+				testOutArray[chan][i] = 0.0f;
+			}
+		}
+		
+		plugin->processReplacing(plugin, testArray, testOutArray, block);
+		if (testOutArray != NULL)
+		{
+			Debug::Log("Running process block. Out pos 0 is: ");
+		}
+		else
+		{
+			Debug::Log("testOutArray is NULL");
+		}
+
+		free(testArray[0]);
+		free(testOutArray[0]);
+		free(testArray[1]);
+		free(testOutArray[1]);
+		free(testArray);
+		free(testOutArray);
 	}
 
 	void resumePlugin(/*AEffect *plugin*/) {

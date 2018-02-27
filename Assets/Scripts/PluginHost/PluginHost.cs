@@ -67,7 +67,7 @@ public class PluginHost : MonoBehaviour
 
     void Start()
     {
-        //processBlock(); //this is a debug- will crash if C's processReplacing stuffs up
+        processBlock(); //this is a debug- will crash if C's processReplacing stuffs up
         inputArray = new float[2][];
         inputArray[0] = new float[blockSize];
         inputArray[1] = new float[blockSize];
@@ -80,7 +80,6 @@ public class PluginHost : MonoBehaviour
         messagePtrSize = 8 * 256;
         messageAsVoidPtr = Marshal.AllocHGlobal(messagePtrSize);
         debugString = new char[256];
-        
     }
 
     //need to update  dll end.
