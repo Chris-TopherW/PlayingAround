@@ -10,26 +10,33 @@
 extern "C" {
 	float** inputs;
 	float** outputs;
-	unsigned int numChannels = 2;
 	unsigned int blocksize = 1024;
 	float outputHolder[1024];
 	char* pszReturn = NULL;
 	wchar_t* wc;
 	//hack in only one plugin for test purposes
 	AEffect* plugin = NULL;
-
-	void start()
-	{
-	}
+	int pluginNumInputs = -1;
+	int pluginNumOutputs = -1;
+	char** paramNames;
 
 	void shutdown()
 	{
 		plugin->dispatcher(plugin, effMainsChanged, 0, 0, NULL, 0.0f);
+		for (int i = 0; i < plugin->numParams; i++)
+		{
+			free(paramNames[i]);
+		}
+		free(paramNames);
+		
 		free(pszReturn);
 		free(wc);
-		for (int i = 0; i < numChannels; i++)
+		for (int i = 0; i < getNumPluginInputs(); i++)
 		{
 			free(inputs[i]);
+		}
+		for (int i = 0; i < getNumPluginOutputs(); i++)
+		{
 			free(outputs[i]);
 		}
 		free(inputs);
@@ -39,11 +46,6 @@ extern "C" {
 	void setBlockSize(int p_blocksize)
 	{
 		blocksize = p_blocksize;
-		//debugMessage = "Block";
-	}
-	void setNumChannels(int p_numChannels)
-	{
-		numChannels = p_numChannels;
 	}
 
 	/*AEffect* */ void loadPlugin(/*char* path*/) {
@@ -86,7 +88,9 @@ extern "C" {
 		{
 			Debug::Log("Error, falied to instantiate plugin");
 		}
-		//return plugin;
+
+		pluginNumInputs = plugin->numInputs;
+		pluginNumOutputs = plugin->numOutputs;
 		return;
 	}
 
@@ -109,6 +113,13 @@ extern "C" {
 		if (dispatcher == NULL)
 		{
 			Debug::Log("C: dispatcher is NULL\n", Color::Black);
+		}
+
+		paramNames = (char**)malloc(sizeof(char*) * plugin->numParams);
+		for (int i = 0; i < plugin->numParams; i++)
+		{
+			paramNames[i] = (char*)malloc(sizeof(char) * 128);
+			plugin->dispatcher(plugin, effGetParamName, i, 0, paramNames[i], 0);
 		}
 
 		// Set up plugin callback functions
@@ -134,6 +145,17 @@ extern "C" {
 		plugin->setParameter(plugin, paramIndex, p_value);
 	}
 
+	float getParam(int index)
+	{
+		return plugin->getParameter(plugin, index);
+	}
+
+	char* getParamName(int index)
+	{
+		plugin->dispatcher(plugin, effGetParamName, index, 0, paramNames[index], 0);
+		return paramNames[index];
+	}
+
 	void startPlugin(/*AEffect *plugin*/) {
 		if (plugin == NULL)
 		{
@@ -151,82 +173,8 @@ extern "C" {
 		resumePlugin(/*plugin*/);
 
 
-		silenceChannel(inputs, numChannels, blocksize);
-		silenceChannel(outputs, numChannels, blocksize);
-
-
-		Debug::Log("About to get into processBlock");
-		Debug::Log("inputs ptr size: ");
-		Debug::Log((int)sizeof(inputs));
-		Debug::Log("inputs[0] size: ");
-		Debug::Log((int)sizeof(inputs[0]));
-		Debug::Log("input[1] size: ");
-		Debug::Log((int)sizeof(inputs[1]));
-		Debug::Log("outputs ptr size: ");
-		Debug::Log((int)sizeof(outputs));
-		Debug::Log("outputs[0] size: ");
-		Debug::Log((int)sizeof(outputs[0]));
-		Debug::Log("outputs[1] size: ");
-		Debug::Log((int)sizeof(outputs[1]));
-		Debug::Log("blocksize: ");
-		Debug::Log((int)blocksize);
-		Debug::Log("Plugin pointer location lolol: ");
-		Debug::Log((int)plugin);
-	}
-
-	void processBlock()
-	{
-		//plugin->processReplacing(plugin, inputs, outputs, blocksize);
-		//cout << "Running process block. Out pos 0 is: " << outputs[0][0] << endl;
-
-		Debug::Log("Num inputs in plugin = ");
-		Debug::Log(plugin->numInputs);
-		Debug::Log("Num outputs in plugin = ");
-		Debug::Log(plugin->numOutputs);
-
-		float** testArray = (float**)malloc(sizeof(float*) * plugin->numInputs);
-		float** testOutArray = (float**)malloc(sizeof(float*) * plugin->numOutputs);
-		int block = 1024;
-		for (int i = 0; i < plugin->numInputs; i++)
-		{
-			testArray[i] = (float*)malloc(sizeof(float) * blocksize);
-		}
-		for (int i = 0; i < plugin->numOutputs; i++)
-		{
-			testOutArray[i] = (float*)malloc(sizeof(float) * blocksize);
-		}
-
-		for (int chan = 0; chan < plugin->numInputs; chan++)
-		{
-			for (int i = 0; i < block; i++)
-			{
-				testArray[chan][i] = 0.0f;
-			}
-		}
-		for (int chan = 0; chan < plugin->numOutputs; chan++)
-		{
-			for (int i = 0; i < block; i++)
-			{
-				testOutArray[chan][i] = 0.0f;
-			}
-		}
-		
-		plugin->processReplacing(plugin, testArray, testOutArray, block);
-		if (testOutArray != NULL)
-		{
-			Debug::Log("Running process block. Out pos 0 is: ");
-		}
-		else
-		{
-			Debug::Log("testOutArray is NULL");
-		}
-
-		free(testArray[0]);
-		free(testOutArray[0]);
-		free(testArray[1]);
-		free(testOutArray[1]);
-		free(testArray);
-		free(testOutArray);
+		silenceChannel(inputs, getNumPluginInputs(), blocksize);
+		silenceChannel(outputs, getNumPluginOutputs(), blocksize);
 	}
 
 	void resumePlugin(/*AEffect *plugin*/) {
@@ -258,8 +206,8 @@ extern "C" {
 
 	VstIntPtr VSTCALLBACK hostCallback(AEffect *effect, VstInt32 opcode, VstInt32 index,
 		VstIntPtr value, void *ptr, float opt) {
-		Debug::Log("Opcode = ");
-		Debug::Log(opcode);
+		//Debug::Log("Opcode = ");
+		//Debug::Log(opcode);
 		switch (opcode) {
 		case audioMasterVersion:
 			return 2400;
@@ -273,23 +221,29 @@ extern "C" {
 	}
 	 
 	void initializeIO() {
-		inputs = (float**)malloc(sizeof(float**) * numChannels); //2*8+(1024*4*2)
-		outputs = (float**)malloc(sizeof(float**) * numChannels);
-		for (int channel = 0; channel < numChannels; channel++) {
+		inputs = (float**)malloc(sizeof(float**) * plugin->numInputs);
+		outputs = (float**)malloc(sizeof(float**) * plugin->numOutputs);
+		for (int channel = 0; channel < plugin->numInputs; channel++) {
 			inputs[channel] = (float*)malloc(sizeof(float) * blocksize);
+		}
+		for (int channel = 0; channel < plugin->numOutputs; channel++) {
 			outputs[channel] = (float*)malloc(sizeof(float) * blocksize);
 		}
 	}
 	
 	float* processAudio(float* in, long numFrames)
 	{
-		silenceChannel(inputs, numChannels, numFrames);
-		silenceChannel(outputs, numChannels, numFrames);
-		//inputs[0] = in;
-		outputs[0] = inputs[0];
+		silenceChannel(inputs, pluginNumInputs, numFrames);
+		silenceChannel(outputs, pluginNumOutputs, numFrames);
 		
-		//plugin->processReplacing(plugin, inputs, outputs, numFrames);
-		//plugin->__processDeprecated(plugin, inputs, outputs, numFrames);
+		for (int samp = 0; samp < numFrames; samp++)
+		{
+			for (int chan = 0; chan < pluginNumInputs; chan++)
+			{
+				inputs[chan][samp] = in[samp];
+			}
+		}
+		plugin->processReplacing(plugin, inputs, outputs, numFrames);
 		return outputs[0];
 	}
 
@@ -298,6 +252,32 @@ extern "C" {
 			for (long frame = 0; frame < numFrames; ++frame) {
 				channelData[channel][frame] = 0.0f;
 			}
+		}
+	}
+
+	int getNumPluginInputs()
+	{
+		if (pluginNumInputs == -1)
+		{
+			Debug::Log("Error, plugin inputs not initialised");
+			return pluginNumInputs;
+		}
+		else
+		{
+			return pluginNumInputs;
+		}
+	}
+
+	int getNumPluginOutputs()
+	{
+		if (pluginNumOutputs == -1)
+		{
+			Debug::Log("Error, plugin outputs not initialised");
+			return pluginNumOutputs;
+		}
+		else
+		{
+			return pluginNumOutputs;
 		}
 	}
 

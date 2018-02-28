@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -427,8 +427,35 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   frequency: 100
   gain: 0.5
-  numParams: 0
-  parameters: []
+  numParams: 13
+  parameters:
+  - 0
+  - 0.5
+  - 0.16100001
+  - 0.75200003
+  - 0.132
+  - 0.024
+  - 1
+  - 0.492
+  - 1
+  - 1
+  - 1
+  - 1
+  - 0
+  paramNames:
+  - 
+  - dry
+  - wet
+  - room size
+  - pre delay
+  - low shelf freque
+  - high shelf frequ
+  - peak frequency
+  - low shelf gain
+  - high shelf gain
+  - peak gain
+  - stereo
+  - stereo input
 --- !u!4 &1307868302
 Transform:
   m_ObjectHideFlags: 0

@@ -3,18 +3,10 @@
 //#include <string>
 //#include <stdio.h>
 //#include <sstream>
-#include "stdafx.h"
+#include "VSTHostUnity.h"
 #include <string>
 
 //#define DLLExport __declspec(dllexport)
-
-//extern "C"
-//{
-//	//Create a callback delegate
-//	typedef void(*FuncCallBack)(const char* message, int color, int size);
-//	static FuncCallBack callbackInstance = nullptr;
-//	DLLExport void RegisterDebugCallback(FuncCallBack cb);
-//}
 
 //Color Enum
 enum class Color { Red, Green, Blue, Black, White, Yellow, Orange };
