@@ -1,7 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
 using cwMidi;
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 public class MidiSource : MonoBehaviour {
 
@@ -19,13 +24,17 @@ public class MidiSource : MonoBehaviour {
     [HideInInspector]
     public double startTimeOffset = 0.0;
 
-    [Range(0.0f, 1.0f)]
-    public float Volume = 1.0f;
+    public float volume;
 
     [Range(-127, 127)]
     public int PitchOffset;
 
     private bool tempHasPlayed = false;
+
+    public string midiInput;
+    public string midiOutput;
+
+    public MyPlayerEditor editor;
 
     private void Awake()
     {
@@ -40,7 +49,7 @@ public class MidiSource : MonoBehaviour {
             Debug.Log("<color=red>Error:</color> Channels must be between 1 and 16. Auto set to 1");
             Channel = 1;
         }
-        if (PlayOnAwake) Play(); 
+        if (PlayOnAwake) Play();
     }
 
     private void Play()
@@ -60,7 +69,6 @@ public class MidiSource : MonoBehaviour {
             startTimeOffset += Metronome.ppqToMs(midiFile.getMidiTrack(1).getTrackPPQLen());
             Play();
         }
-
     }
 
     public long getTrackPPQAbsolutePos()
@@ -71,5 +79,67 @@ public class MidiSource : MonoBehaviour {
     public void setTrackPPQAbsolutePos(long p_pos)
     {
         trackPPQAbsolutePos = p_pos;
+    }
+}
+
+// Custom Editor using SerializedProperties.
+// Automatic handling of multi-object editing, undo, and prefab overrides.
+[CustomEditor(typeof(MidiSource))]
+[CanEditMultipleObjects]
+public class MyPlayerEditor : Editor
+{
+    static string deviceNamePlaceholder;
+    SerializedProperty midiInputProp;
+    string[] midiInputChoices = new[] { "Up", "Down", "Left", "Blah" };
+    int midiInputIndex = 0;
+
+    SerializedProperty midiOutputProp;
+    string[] midiOutputChoices = new[] { "Up", "Down", "Left", "Right" };
+    int midiOutputIndex = 0;
+
+    MidiSource script;
+
+    public int channel;
+
+
+    void OnEnable()
+    {
+        deviceNamePlaceholder = PortMidi.getDeviceName(0);
+        script = (MidiSource)target;
+        script.editor = this;
+
+        midiInputProp = serializedObject.FindProperty("midiInput");
+        midiInputIndex = Array.IndexOf(midiInputChoices, midiInputProp.stringValue);
+
+        midiOutputProp = serializedObject.FindProperty("midiOutput");
+        midiOutputIndex = Array.IndexOf(midiOutputChoices, midiOutputProp.stringValue);
+
+    }
+
+    public override void OnInspectorGUI()
+    {
+        serializedObject.Update();
+
+        
+        midiInputIndex = EditorGUILayout.Popup("Midi Input", midiInputIndex, midiInputChoices);
+        if (midiInputIndex < 0)
+            midiInputIndex = 0;
+        midiInputProp.stringValue = midiInputChoices[midiInputIndex];
+
+        midiOutputIndex = EditorGUILayout.Popup("Midi Output", midiOutputIndex, midiOutputChoices);
+        if (midiOutputIndex < 0)
+            midiOutputIndex = 0;
+        midiOutputProp.stringValue = midiOutputChoices[midiOutputIndex];
+
+        script.Mute = EditorGUILayout.Toggle("Mute", script.Mute);
+        script.PlayOnAwake = EditorGUILayout.Toggle("PlayOnAwake", script.PlayOnAwake);
+        script.Loop = EditorGUILayout.Toggle("Loop", script.Loop);
+        script.ForceToChannel = EditorGUILayout.Toggle("ForceToChannel", script.ForceToChannel);
+        script.Channel = EditorGUILayout.IntField("Channel", script.Channel);
+        script.volume = EditorGUILayout.Slider("Volume", script.volume, 0.0f, 1.0f);
+
+
+        // Apply changes to the serializedProperty - always do this in the end of OnInspectorGUI.
+        serializedObject.ApplyModifiedProperties();
     }
 }
