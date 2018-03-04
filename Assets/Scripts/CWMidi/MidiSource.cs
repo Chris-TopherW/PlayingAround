@@ -95,6 +95,7 @@ public class MyPlayerEditor : Editor
 
     SerializedProperty midiOutputProp;
     string[] midiOutputChoices = new[] { "Up", "Down", "Left", "Right" };
+   
     int midiOutputIndex = 0;
 
     MidiSource script;
@@ -104,6 +105,7 @@ public class MyPlayerEditor : Editor
 
     void OnEnable()
     {
+        midiOutputChoices[0] = "Device1";
         deviceNamePlaceholder = PortMidi.getDeviceName(0);
         script = (MidiSource)target;
         script.editor = this;

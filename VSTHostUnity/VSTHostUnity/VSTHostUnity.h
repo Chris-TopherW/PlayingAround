@@ -21,7 +21,7 @@ extern "C"
 	VSTEXPORT float getParam(int index);
 	VSTEXPORT char* getParamName(int index);
 	VSTEXPORT void initializeIO();
-	VSTEXPORT float* processAudio(float* in, long numFrames);
+	VSTEXPORT float* processAudio(float* in, long numFrames, int numChannels);
 	VSTEXPORT void silenceChannel(float **channelData, int numChannels, long numFrames);
 	VSTEXPORT void processMidi(/*AEffect *plugin, */VstEvents *events);
 	VSTEXPORT void shutdown();

@@ -3,10 +3,10 @@ c:\audio\vst_sdk\vst2_sdk\pluginterfaces\vst2.x\aeffect.h(335): warning C4996: '
   c:\program files (x86)\windows kits\10\include\10.0.15063.0\ucrt\string.h(343): note: see declaration of 'strncpy'
 c:\audio\vst_sdk\vst2_sdk\pluginterfaces\vst2.x\aeffect.h(345): warning C4996: 'strncat': This function or variable may be unsafe. Consider using strncat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.15063.0\ucrt\string.h(271): note: see declaration of 'strncat'
+cl : Command line warning D9028: minimal rebuild failure, reverting to normal build
   VSTHostUnity.cpp
-c:\users\chriswratt\documents\unityprojects\unitymidilib\vsthostunity\vsthostunity\vsthostunity.cpp(297): warning C4996: 'mbstowcs': This function or variable may be unsafe. Consider using mbstowcs_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+c:\users\chriswratt\documents\unityprojects\unitymidilib\vsthostunity\vsthostunity\vsthostunity.cpp(343): warning C4996: 'mbstowcs': This function or variable may be unsafe. Consider using mbstowcs_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.15063.0\ucrt\stdlib.h(931): note: see declaration of 'mbstowcs'
 c:\users\chriswratt\documents\unityprojects\unitymidilib\vsthostunity\vsthostunity\vsthostunity.cpp(221): warning C4715: 'hostCallback': not all control paths return a value
-     Creating library C:\Users\chriswratt\Documents\UnityProjects\UnityMidiLib\VSTHostUnity\VSTHostUnity\x64\Debug\VSTHostUnity.lib and object C:\Users\chriswratt\Documents\UnityProjects\UnityMidiLib\VSTHostUnity\VSTHostUnity\x64\Debug\VSTHostUnity.exp
   VSTHostUnity.vcxproj -> C:\Users\chriswratt\Documents\UnityProjects\UnityMidiLib\VSTHostUnity\VSTHostUnity\x64\Debug\VSTHostUnity.dll
   VSTHostUnity.vcxproj -> C:\Users\chriswratt\Documents\UnityProjects\UnityMidiLib\VSTHostUnity\VSTHostUnity\x64\Debug\VSTHostUnity.pdb (Partial PDB)

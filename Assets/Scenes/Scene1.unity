@@ -212,8 +212,11 @@ MonoBehaviour:
   ForceToChannel: 1
   Channel: 1
   startTimeOffset: 0
-  Volume: 1
+  volume: 0
   PitchOffset: 0
+  midiInput: Up
+  midiOutput: Device1
+  editor: {fileID: 0}
 --- !u!4 &567117958
 Transform:
   m_ObjectHideFlags: 0
@@ -405,8 +408,8 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1307868302}
-  - component: {fileID: 1307868301}
   - component: {fileID: 1307868303}
+  - component: {fileID: 1307868301}
   m_Layer: 0
   m_Name: PluginHosting
   m_TagString: Untagged
@@ -425,8 +428,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f875a57a1929538419e12b0b211d63b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  frequency: 100
-  gain: 0.5
+  pluginPath: 
   numParams: 13
   parameters:
   - 0
@@ -478,11 +480,11 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: 7d32bbab32559384aa1cd20af8ad069d, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
-  m_Pitch: 1
-  Loop: 0
+  m_Pitch: 2.14
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
@@ -608,8 +610,11 @@ MonoBehaviour:
   ForceToChannel: 0
   Channel: 1
   startTimeOffset: 0
-  Volume: 1
+  volume: 0
   PitchOffset: 0
+  midiInput: 
+  midiOutput: 
+  editor: {fileID: 0}
 --- !u!1 &2120629446
 GameObject:
   m_ObjectHideFlags: 0
@@ -644,8 +649,11 @@ MonoBehaviour:
   ForceToChannel: 0
   Channel: 2
   startTimeOffset: 0
-  Volume: 1
+  volume: 0
   PitchOffset: 0
+  midiInput: Up
+  midiOutput: Up
+  editor: {fileID: 0}
 --- !u!4 &2120629448
 Transform:
   m_ObjectHideFlags: 0

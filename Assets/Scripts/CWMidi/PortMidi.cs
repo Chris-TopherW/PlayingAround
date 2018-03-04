@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Runtime.InteropServices;
+using System;
 
 //this talks directly to C DLL. For some reason it slows things down on build a lot...
 
@@ -25,7 +26,19 @@ namespace cwMidi
         [DllImport("portmidi", EntryPoint = "midiEvent")]
         public static extern void midiEvent(int status, int mess1, int mess2, int delay);
 
+        [DllImport("portmidi", EntryPoint = "getNamePointer")]
+        public static extern IntPtr getNamePointer(int index);
+
+        [DllImport("portmidi", EntryPoint = "getNumDevices")]
+        public static extern int getNumDevices();
+
         [DllImport("portmidi", EntryPoint = "shutdown")]
         public static extern void shutdown();
-    }
+
+
+        public static string getDeviceName(int index)
+        {
+            return "Device Name here";
+        }
+    }    
 }

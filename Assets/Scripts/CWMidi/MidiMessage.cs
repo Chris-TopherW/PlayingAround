@@ -78,7 +78,7 @@ namespace cwMidi
         public MidiTrack getOwnerTrack() { return ownerTrack; }
 
         public float getGain() {
-            if (noteSource != null) return noteSource.Volume;
+            if (noteSource != null) return noteSource.volume;
             else
             {
                 //UnityEngine.Debug.Log("midi message has no owning midi source, setting gain to default");
