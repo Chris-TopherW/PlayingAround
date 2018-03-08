@@ -6,7 +6,7 @@
 #include "VSTHostUnity.h"
 #include <string>
 
-//#define DLLExport __declspec(dllexport)
+#define VSTEXPORT __declspec(dllexport)
 
 //Color Enum
 enum class Color { Red, Green, Blue, Black, White, Yellow, Orange };

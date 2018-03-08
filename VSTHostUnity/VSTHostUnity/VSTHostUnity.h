@@ -6,27 +6,28 @@
 
 extern "C"
 {
-	const wchar_t* GetWC(const char *c);
-	VSTEXPORT void setBlockSize(int p_blocksize);
+	const wchar_t* GetWC(const char *c); 
+	VSTEXPORT void setBlockSize(int p_blocksize); 
 	// Main host callback
 	VstIntPtr VSTCALLBACK hostCallback(AEffect *effect, VstInt32 opcode, VstInt32 index,
-		VstIntPtr value, void *ptr, float opt);
-	VSTEXPORT /*AEffect* */ void loadPlugin(/*char* path*/);
-	VSTEXPORT int configurePluginCallbacks(/*AEffect *plugin*/);
-	VSTEXPORT void startPlugin(/*AEffect *plugin*/);
-	VSTEXPORT void resumePlugin(/*AEffect *plugin*/);
-	VSTEXPORT void suspendPlugin(/*AEffect *plugin*/);
-	VSTEXPORT int getNumParams();
-	VSTEXPORT void setParam(int paramIndex, float p_value);
-	VSTEXPORT float getParam(int index);
-	VSTEXPORT char* getParamName(int index);
-	VSTEXPORT void initializeIO();
-	VSTEXPORT float* processAudio(float* in, long numFrames, int numChannels);
-	VSTEXPORT void silenceChannel(float **channelData, int numChannels, long numFrames);
-	VSTEXPORT void processMidi(/*AEffect *plugin, */VstEvents *events);
-	VSTEXPORT void shutdown();
-	VSTEXPORT int getNumPluginInputs();
-	VSTEXPORT int getNumPluginOutputs();
+		VstIntPtr value, void *ptr, float opt); 
+	VSTEXPORT /*AEffect* */ void loadPlugin(/*char* path*/); 
+	VSTEXPORT int configurePluginCallbacks(/*AEffect *plugin*/); 
+	VSTEXPORT void startPlugin(/*AEffect *plugin*/); 
+	VSTEXPORT void resumePlugin(/*AEffect *plugin*/); 
+	VSTEXPORT void suspendPlugin(/*AEffect *plugin*/); 
+	VSTEXPORT int getNumParams(); 
+	VSTEXPORT void setParam(int paramIndex, float p_value); 
+	VSTEXPORT float getParam(int index); 
+	VSTEXPORT char* getParamName(int index); 
+	VSTEXPORT void initializeIO(); 
+	VSTEXPORT float* processAudio(float* in, long numFrames, int numChannels); 
+	VSTEXPORT void silenceChannel(float **channelData, int numChannels, long numFrames); 
+	VSTEXPORT void midiEvent(int status, int mess1, int mess2, long delaySamps); 
+	//VSTEXPORT void processMidi(/*AEffect *plugin, */VstEvents *events); n
+	VSTEXPORT void shutdown(); 
+	VSTEXPORT int getNumPluginInputs(); 
+	VSTEXPORT int getNumPluginOutputs(); 
 }
 
 //debugger

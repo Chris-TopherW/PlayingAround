@@ -24,7 +24,7 @@ namespace cwMidi
         public static extern int main_test_output();
 
         [DllImport("portmidi", EntryPoint = "midiEvent")]
-        public static extern void midiEvent(int status, int mess1, int mess2, int delay);
+        public static extern void midiEvent(int status, int mess1, int mess2, int delayMs);
 
         [DllImport("portmidi", EntryPoint = "getNamePointer")]
         public static extern IntPtr getNamePointer(int index);

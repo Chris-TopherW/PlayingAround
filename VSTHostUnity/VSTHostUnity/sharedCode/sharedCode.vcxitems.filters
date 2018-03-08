@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{e6d2f283-9dd6-4f83-9c7a-08534a026867}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{13025872-f90d-468f-b4dc-1b315680018d}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="C:\Users\chriswratt\Documents\UnityProjects\UnityMidiLib\VSTHostUnity\VSTHostUnity\sharedCode\..\targetver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\chriswratt\Documents\UnityProjects\UnityMidiLib\VSTHostUnity\VSTHostUnity\sharedCode\..\PluginHost.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\chriswratt\Documents\UnityProjects\UnityMidiLib\VSTHostUnity\VSTHostUnity\sharedCode\..\VSTEffect.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\chriswratt\Documents\UnityProjects\UnityMidiLib\VSTHostUnity\VSTHostUnity\sharedCode\..\VSTi.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\chriswratt\Documents\UnityProjects\UnityMidiLib\VSTHostUnity\VSTHostUnity\sharedCode\..\VSTBase.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\chriswratt\Documents\UnityProjects\UnityMidiLib\VSTHostUnity\VSTHostUnity\sharedCode\..\stdafx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\chriswratt\Documents\UnityProjects\UnityMidiLib\VSTHostUnity\VSTHostUnity\sharedCode\..\DebugCPP.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="C:\Users\chriswratt\Documents\UnityProjects\UnityMidiLib\VSTHostUnity\VSTHostUnity\sharedCode\..\stdafx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\chriswratt\Documents\UnityProjects\UnityMidiLib\VSTHostUnity\VSTHostUnity\sharedCode\..\PluginHost.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\chriswratt\Documents\UnityProjects\UnityMidiLib\VSTHostUnity\VSTHostUnity\sharedCode\..\VSTEffect.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\chriswratt\Documents\UnityProjects\UnityMidiLib\VSTHostUnity\VSTHostUnity\sharedCode\..\VSTi.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\chriswratt\Documents\UnityProjects\UnityMidiLib\VSTHostUnity\VSTHostUnity\sharedCode\..\VSTBase.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

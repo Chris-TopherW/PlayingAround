@@ -233,7 +233,6 @@ extern "C" {
 	
 	float* processAudio(float* audioThrough, long numFrames, int numChannels)
 	{
-
 		silenceChannel(pluginInputs, pluginNumInputs, numFrames);
 		silenceChannel(pluginOutputs, pluginNumOutputs, numFrames);
 
@@ -264,7 +263,6 @@ extern "C" {
 		}
 		
 		plugin->processReplacing(plugin, pluginInputs, pluginOutputs, numFrames);
-		
 
 		/////////re-interleaver////////
 		j = 0;

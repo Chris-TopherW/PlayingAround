@@ -11,6 +11,7 @@ namespace cwMidi
         public static List<MidiMessage> messOutBuff;
         private static double updateLookAhead = 1000; //ms
         private static bool hasStarted = false;
+        private static int midiOutput = 0;
 
         public static int Start()
         {
@@ -78,6 +79,12 @@ namespace cwMidi
 
         public static void Update()
         {
+            ///////////////Misc debug zone/////////////////
+
+            //Debug.Log("Current midi output is: " + midiOutput);
+
+            ////////////////////////////////////////
+
             double currentTime = (AudioSettings.dspTime) * 1000.0;
             if(messOutBuff.Count > 0)
             {
@@ -87,18 +94,8 @@ namespace cwMidi
                 //this while accounts for multiple notes at once
                 while (msUntilEvent < updateLookAhead && messOutBuff.Count > 0)
                 {
-                    if (Midi.debugLevel > 0) Debug.Log("Absolute timestamp = " + temporaryMessage.getAbsTimeStamp());
                     long msOffset = (long)(msUntilEvent);
-                    ///*if (Midi.debugLevel > 0) */UnityEngine.Debug.Log("Event time: " + msOffset);
-                    if (msOffset < 0)
-                    {
-                        //Debug.Log("<color=red>Error: negative event time offset : </color>" + msOffset + ", setting time to 0");
-                        //Debug.Log("source start time offset : " + temporaryMessage.noteSource.startTimeOffset);
-                        //Debug.Log("MS time of note relative to track start : " + Metronome.ppqToMs(temporaryMessage.getAbsTimeStamp()));
-                        //Debug.Log("Current time : " + currentTime);
-                        //Debug.Log("metro start time : " + metronomeStartTimeMs);
-                        msOffset = 0;
-                    }
+                    if (msOffset < 0) msOffset = 0; //should catch any rogue startup notes
                     
                     MidiMessage p_message = messOutBuff[0];
                     messOutBuff.RemoveAt(0);
@@ -117,9 +114,19 @@ namespace cwMidi
                     if (p_message.noteSource.Mute) 
                         amplitude = 0; 
                     else 
-                        amplitude = (int)(p_message.getByteTwo() * p_message.getGain()); 
+                        amplitude = (int)(p_message.getByteTwo() * p_message.getGain());
+
 
                     PortMidi.midiEvent(statusByte, p_message.getByteOne() + p_message.noteSource.PitchOffset, amplitude, (int)(msOffset));
+                    //////put in if statement here based on channel input
+                    if (midiOutput == 0)
+                    {
+                        //HostDll.midiEvent(statusByte, p_message.getByteOne() + p_message.noteSource.PitchOffset, amplitude, Metronome.msToSamps(msOffset));
+                    }
+                    else
+                    {
+                        PortMidi.midiEvent(statusByte, p_message.getByteOne() + p_message.noteSource.PitchOffset, amplitude, (int)(msOffset));
+                    }
 
                     if (messOutBuff.Count > 0)
                     {
@@ -152,6 +159,16 @@ namespace cwMidi
         public static void reorderQueue()
         {
             messOutBuff.Sort((a, b) => { return a.getAbsTimeStamp().CompareTo(b.getAbsTimeStamp()); });
+        }
+
+        public static int getMidiOutIndex()
+        {
+            return midiOutput;
+        }
+
+        public static void setMidiOutIndex(int p_index)
+        {
+            midiOutput = p_index;
         }
 
         public static int Shutdown()

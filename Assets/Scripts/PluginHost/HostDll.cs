@@ -29,4 +29,7 @@ public static class HostDll {
     public static extern int getNumPluginOutputs();
     [DllImport("VSTHostUnity", EntryPoint = "getNumPluginInputs", CallingConvention = CallingConvention.Cdecl)]
     public static extern int getNumPluginInputs();
+
+    //[DllImport("VSTHostUnity", EntryPoint = "midiEvent", CallingConvention = CallingConvention.Cdecl)]
+    //public static extern void midiEvent(int status, int mess1, int mess2, long delaySamps);
 }

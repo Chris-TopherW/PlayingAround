@@ -212,10 +212,10 @@ MonoBehaviour:
   ForceToChannel: 1
   Channel: 1
   startTimeOffset: 0
-  volume: 0
+  volume: 1
   PitchOffset: 0
   midiInput: Up
-  midiOutput: Device1
+  midiOutput: Port Midi
   editor: {fileID: 0}
 --- !u!4 &567117958
 Transform:
@@ -612,8 +612,8 @@ MonoBehaviour:
   startTimeOffset: 0
   volume: 0
   PitchOffset: 0
-  midiInput: 
-  midiOutput: 
+  midiInput: Up
+  midiOutput: Internal midi
   editor: {fileID: 0}
 --- !u!1 &2120629446
 GameObject:
@@ -652,7 +652,7 @@ MonoBehaviour:
   volume: 0
   PitchOffset: 0
   midiInput: Up
-  midiOutput: Up
+  midiOutput: Internal midi
   editor: {fileID: 0}
 --- !u!4 &2120629448
 Transform:

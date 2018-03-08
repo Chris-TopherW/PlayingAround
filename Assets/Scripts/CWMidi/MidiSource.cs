@@ -34,7 +34,9 @@ public class MidiSource : MonoBehaviour {
     public string midiInput;
     public string midiOutput;
 
+    #if UNITY_EDITOR
     public MyPlayerEditor editor;
+    #endif
 
     private void Awake()
     {
@@ -50,13 +52,13 @@ public class MidiSource : MonoBehaviour {
             Channel = 1;
         }
         if (PlayOnAwake) Play();
+
+        //Debug.Log("Current midi output = " + getMidiOutStr());
     }
 
     private void Play()
     {
-        startTimeOffset = AudioSettings.dspTime * 1000; /*- MidiPlayer.getMetronomeStartTime()*/ //why the metronome offset?
-        //Debug.Log("Offset: " + startTimeOffset);
-        //Debug.Log("start time in ms: " + MidiPlayer.getMetronomeStartTime());
+        startTimeOffset = AudioSettings.dspTime * 1000;
         MidiPlayer.PlayTrack(midiFile.getMidiTrack(1), this);
         MidiPlayer.reorderQueue();
     }
@@ -80,6 +82,11 @@ public class MidiSource : MonoBehaviour {
     {
         trackPPQAbsolutePos = p_pos;
     }
+
+    //public string getMidiOutStr()
+    //{
+    //    return editor.midiOutputChoices[MidiPlayer.getMidiOutIndex()];
+    //}
 }
 
 // Custom Editor using SerializedProperties.
@@ -88,15 +95,14 @@ public class MidiSource : MonoBehaviour {
 [CanEditMultipleObjects]
 public class MyPlayerEditor : Editor
 {
-    static string deviceNamePlaceholder;
-    SerializedProperty midiInputProp;
-    string[] midiInputChoices = new[] { "Up", "Down", "Left", "Blah" };
-    int midiInputIndex = 0;
+    //SerializedProperty midiInputProp;
+    //string[] midiInputChoices = new[] { "Up", "Down", "Left", "Blah" };
+    //int midiInputIndex = 0;
 
     SerializedProperty midiOutputProp;
-    string[] midiOutputChoices = new[] { "Up", "Down", "Left", "Right" };
-   
-    int midiOutputIndex = 0;
+    public string[] midiOutputChoices = new[] { "Internal midi", "Port Midi" };
+
+    //public int midiOutputIndex = 0;
 
     MidiSource script;
 
@@ -105,16 +111,14 @@ public class MyPlayerEditor : Editor
 
     void OnEnable()
     {
-        midiOutputChoices[0] = "Device1";
-        deviceNamePlaceholder = PortMidi.getDeviceName(0);
         script = (MidiSource)target;
         script.editor = this;
 
-        midiInputProp = serializedObject.FindProperty("midiInput");
-        midiInputIndex = Array.IndexOf(midiInputChoices, midiInputProp.stringValue);
+        //midiInputProp = serializedObject.FindProperty("midiInput");
+        //midiInputIndex = Array.IndexOf(midiInputChoices, midiInputProp.stringValue);
 
         midiOutputProp = serializedObject.FindProperty("midiOutput");
-        midiOutputIndex = Array.IndexOf(midiOutputChoices, midiOutputProp.stringValue);
+        MidiPlayer.setMidiOutIndex(Array.IndexOf(midiOutputChoices, midiOutputProp.stringValue));
 
     }
 
@@ -122,15 +126,17 @@ public class MyPlayerEditor : Editor
     {
         serializedObject.Update();
 
-        
-        midiInputIndex = EditorGUILayout.Popup("Midi Input", midiInputIndex, midiInputChoices);
-        if (midiInputIndex < 0)
-            midiInputIndex = 0;
-        midiInputProp.stringValue = midiInputChoices[midiInputIndex];
+        //int midiOutputIndex = MidiPlayer.getMidiOutIndex();
 
-        midiOutputIndex = EditorGUILayout.Popup("Midi Output", midiOutputIndex, midiOutputChoices);
+        //midiInputIndex = EditorGUILayout.Popup("Midi Input", midiInputIndex, midiInputChoices);
+        //if (midiInputIndex < 0)
+        //    midiInputIndex = 0;
+        //midiInputProp.stringValue = midiInputChoices[midiInputIndex];
+        int midiOutputIndex = MidiPlayer.getMidiOutIndex();
+
+        MidiPlayer.setMidiOutIndex(EditorGUILayout.Popup("Midi Output", midiOutputIndex, midiOutputChoices));
         if (midiOutputIndex < 0)
-            midiOutputIndex = 0;
+            MidiPlayer.setMidiOutIndex(0);
         midiOutputProp.stringValue = midiOutputChoices[midiOutputIndex];
 
         script.Mute = EditorGUILayout.Toggle("Mute", script.Mute);

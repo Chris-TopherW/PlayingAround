@@ -24,6 +24,11 @@ namespace cwMidi
             return p_ms / msPerPPQ;
         }
 
+        public static long msToSamps(double p_ms)
+        {
+            return (long)((p_ms / 1000.0) * AudioSettings.outputSampleRate);
+        }
+
         public static void startMetro(int p_BPM)
         {
             BPM = p_BPM;

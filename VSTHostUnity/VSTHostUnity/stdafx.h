@@ -11,3 +11,4 @@
 #include <aeffect.h>
 #include <aeffectx.h>
 #include <vstfxstore.h>
+#include <iostream>
