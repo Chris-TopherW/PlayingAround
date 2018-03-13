@@ -1,0 +1,25 @@
+﻿  DebugCPP.cpp
+c:\audio\vst_sdk\vst2_sdk\pluginterfaces\vst2.x\aeffect.h(335): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.15063.0\ucrt\string.h(343): note: see declaration of 'strncpy'
+c:\audio\vst_sdk\vst2_sdk\pluginterfaces\vst2.x\aeffect.h(345): warning C4996: 'strncat': This function or variable may be unsafe. Consider using strncat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.15063.0\ucrt\string.h(271): note: see declaration of 'strncat'
+  Generating Code...
+  Compiling...
+  PluginHost.cpp
+c:\audio\vst_sdk\vst2_sdk\pluginterfaces\vst2.x\aeffect.h(335): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.15063.0\ucrt\string.h(343): note: see declaration of 'strncpy'
+c:\audio\vst_sdk\vst2_sdk\pluginterfaces\vst2.x\aeffect.h(345): warning C4996: 'strncat': This function or variable may be unsafe. Consider using strncat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.15063.0\ucrt\string.h(271): note: see declaration of 'strncat'
+c:\users\chriswratt\documents\unityprojects\unitymidilib\vsthostunity\vsthostunity\pluginhost.cpp(13): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+c:\users\chriswratt\documents\unityprojects\unitymidilib\vsthostunity\vsthostunity\pluginhost.cpp(22): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+c:\users\chriswratt\documents\unityprojects\unitymidilib\vsthostunity\vsthostunity\pluginhost.cpp(75): warning C4996: 'mbstowcs': This function or variable may be unsafe. Consider using mbstowcs_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.15063.0\ucrt\stdlib.h(931): note: see declaration of 'mbstowcs'
+  Generating Code...
+  Skipping... (no relevant changes detected)
+  ConsoleHost.cpp
+  ConsoleFuncs.cpp
+  VSTi.cpp
+  VSTEffect.cpp
+  VSTBase.cpp
+  ConsoleHost.vcxproj -> C:\Users\chriswratt\Documents\UnityProjects\UnityMidiLib\VSTHostUnity\VSTHostUnity\x64\Debug\ConsoleHost.exe
+  ConsoleHost.vcxproj -> C:\Users\chriswratt\Documents\UnityProjects\UnityMidiLib\VSTHostUnity\VSTHostUnity\x64\Debug\ConsoleHost.pdb (Partial PDB)

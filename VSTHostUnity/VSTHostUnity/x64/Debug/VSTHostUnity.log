@@ -1,10 +1,20 @@
-﻿  UnityInterface.cpp
+﻿  stdafx.cpp
+c:\audio\vst_sdk\vst2_sdk\pluginterfaces\vst2.x\aeffect.h(335): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.15063.0\ucrt\string.h(343): note: see declaration of 'strncpy'
+c:\audio\vst_sdk\vst2_sdk\pluginterfaces\vst2.x\aeffect.h(345): warning C4996: 'strncat': This function or variable may be unsafe. Consider using strncat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.15063.0\ucrt\string.h(271): note: see declaration of 'strncat'
+  UnityInterface.cpp
 c:\audio\vst_sdk\vst2_sdk\pluginterfaces\vst2.x\aeffect.h(335): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.15063.0\ucrt\string.h(343): note: see declaration of 'strncpy'
 c:\audio\vst_sdk\vst2_sdk\pluginterfaces\vst2.x\aeffect.h(345): warning C4996: 'strncat': This function or variable may be unsafe. Consider using strncat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.15063.0\ucrt\string.h(271): note: see declaration of 'strncat'
   DebugCPP.cpp
   VSTi.cpp
+c:\audio\vst_sdk\vst2_sdk\pluginterfaces\vst2.x\aeffect.h(335): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.15063.0\ucrt\string.h(343): note: see declaration of 'strncpy'
+c:\audio\vst_sdk\vst2_sdk\pluginterfaces\vst2.x\aeffect.h(345): warning C4996: 'strncat': This function or variable may be unsafe. Consider using strncat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.15063.0\ucrt\string.h(271): note: see declaration of 'strncat'
+  VSTEffect.cpp
 c:\audio\vst_sdk\vst2_sdk\pluginterfaces\vst2.x\aeffect.h(335): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.15063.0\ucrt\string.h(343): note: see declaration of 'strncpy'
 c:\audio\vst_sdk\vst2_sdk\pluginterfaces\vst2.x\aeffect.h(345): warning C4996: 'strncat': This function or variable may be unsafe. Consider using strncat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
@@ -19,11 +29,15 @@ c:\audio\vst_sdk\vst2_sdk\pluginterfaces\vst2.x\aeffect.h(335): warning C4996: '
   c:\program files (x86)\windows kits\10\include\10.0.15063.0\ucrt\string.h(343): note: see declaration of 'strncpy'
 c:\audio\vst_sdk\vst2_sdk\pluginterfaces\vst2.x\aeffect.h(345): warning C4996: 'strncat': This function or variable may be unsafe. Consider using strncat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.15063.0\ucrt\string.h(271): note: see declaration of 'strncat'
-c:\users\chriswratt\documents\unityprojects\unitymidilib\vsthostunity\vsthostunity\pluginhost.cpp(13): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-c:\users\chriswratt\documents\unityprojects\unitymidilib\vsthostunity\vsthostunity\pluginhost.cpp(22): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-c:\users\chriswratt\documents\unityprojects\unitymidilib\vsthostunity\vsthostunity\pluginhost.cpp(75): warning C4996: 'mbstowcs': This function or variable may be unsafe. Consider using mbstowcs_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-  c:\program files (x86)\windows kits\10\include\10.0.15063.0\ucrt\stdlib.h(931): note: see declaration of 'mbstowcs'
+c:\users\chriswratt\documents\unityprojects\unitymidilib\vsthostunity\vsthostunity\pluginhost.cpp(14): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+c:\users\chriswratt\documents\unityprojects\unitymidilib\vsthostunity\vsthostunity\pluginhost.cpp(23): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
   Generating Code...
-c:\users\chriswratt\documents\unityprojects\unitymidilib\vsthostunity\vsthostunity\vstbase.cpp(224): warning C4715: 'hostCallback': not all control paths return a value
+c:\users\chriswratt\documents\unityprojects\unitymidilib\vsthostunity\vsthostunity\vstbase.cpp(188): warning C4715: 'hostCallback': not all control paths return a value
+  dllmain.cpp
+c:\audio\vst_sdk\vst2_sdk\pluginterfaces\vst2.x\aeffect.h(335): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.15063.0\ucrt\string.h(343): note: see declaration of 'strncpy'
+c:\audio\vst_sdk\vst2_sdk\pluginterfaces\vst2.x\aeffect.h(345): warning C4996: 'strncat': This function or variable may be unsafe. Consider using strncat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.15063.0\ucrt\string.h(271): note: see declaration of 'strncat'
+     Creating library C:\Users\chriswratt\Documents\UnityProjects\UnityMidiLib\VSTHostUnity\VSTHostUnity\x64\Debug\VSTHostUnity.lib and object C:\Users\chriswratt\Documents\UnityProjects\UnityMidiLib\VSTHostUnity\VSTHostUnity\x64\Debug\VSTHostUnity.exp
   VSTHostUnity.vcxproj -> C:\Users\chriswratt\Documents\UnityProjects\UnityMidiLib\VSTHostUnity\VSTHostUnity\x64\Debug\VSTHostUnity.dll
   VSTHostUnity.vcxproj -> C:\Users\chriswratt\Documents\UnityProjects\UnityMidiLib\VSTHostUnity\VSTHostUnity\x64\Debug\VSTHostUnity.pdb (Partial PDB)

@@ -33,9 +33,8 @@ int loadEffect(char* path)
 {
 	if (hostInitialised)
 	{
-		//hack in const location for testing
-		path = "C:\\Users\\chriswratt\\Documents\\UnityProjects\\UnityMidiLib\\VSTHostUnity\\VSTHostUnity\\TAL-Reverb-2.dll";
-		return vstHost->loadEffect(path);
+		std::string effectLocation(path);
+		return vstHost->loadEffect(effectLocation);
 	}
 	else
 	{
@@ -48,7 +47,8 @@ int loadInstrument(char* path)
 {
 	if (hostInitialised)
 	{
-		return vstHost->loadInstrument(path);
+		std::string effectLocation(path);
+		return vstHost->loadInstrument(effectLocation);
 	}
 	else
 	{
@@ -58,7 +58,6 @@ int loadInstrument(char* path)
 	
 }
 
-//not going to do init checks in these as they get called too much
 float* processFxAudio(int vstIndex, float* audioThrough, long numFrames, int numChannels)
 {
 	return vstHost->getEffect(vstIndex).processAudio(audioThrough, numFrames, numChannels);
@@ -68,4 +67,3 @@ float* processInstAudio(int vstIndex, long numFrames, int numChannels)
 {
 	return vstHost->getInstrument(vstIndex).processAudio(numFrames, numChannels);
 }
-

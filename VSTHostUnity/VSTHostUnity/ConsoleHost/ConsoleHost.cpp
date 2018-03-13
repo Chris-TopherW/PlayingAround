@@ -16,11 +16,10 @@ int main()
 	Debug::Log("SR setup");
 	consoleHost.setHostBlockSize(1);
 	Debug::Log("Blocksize set");
-	int effectIndex = consoleHost.loadEffect("Blah");
-	Debug::Log("effect loaded");
+	std::string effectName("C:\\Users\\chriswratt\\Documents\\UnityProjects\\UnityMidiLib\\VSTHostUnity\\VSTHostUnity\\TAL-Reverb-2.dll");
+	int effectIndex = consoleHost.loadEffect(effectName);
 	float someSound[1];
 	someSound[0] = 0.0f;
 	consoleHost.processFxAudio(effectIndex, someSound, 1, 1);
 	Debug::Log("Audio through");
-    return 0;
 }

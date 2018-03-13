@@ -4,7 +4,7 @@
 class VSTEffect : public VSTBase
 {
 public:
-	VSTEffect(const wchar_t* path, VstBasicParams* p_hostParams);
+	VSTEffect(std::string& path, VstBasicParams& p_hostParams);
 	~VSTEffect();
 	float* processAudio(float* audioThrough, long numFrames, int numChannels);
 	int getNumPluginInputs();
@@ -12,7 +12,9 @@ public:
 	void initializeIO();
 
 private:
-	float** pluginInputs = NULL;
-	float** pluginOutputs = NULL;
+	std::vector<std::vector<float>> pluginInputs;
+	std::vector<std::vector<float>> pluginOutputs;
 	std::string pluginPath;
+	float** pluginInputsStartPtr;
+	float** pluginOutputsStartPtr;
 };

@@ -32,12 +32,10 @@ void ConsoleHost::setHostBlockSize(int p_blocksize)
 		cout << "Host not initialised, set blocksize failed" << endl;
 }
 
-int ConsoleHost::loadEffect(char* path)
+int ConsoleHost::loadEffect(std::string& path)
 {
 	if (hostInitialised)
 	{
-		//hack in const location for testing
-		path = "C:\\Users\\chriswratt\\Documents\\UnityProjects\\UnityMidiLib\\VSTHostUnity\\VSTHostUnity\\TAL-Reverb-2.dll";
 		return vstHost->loadEffect(path);
 	}
 	else
@@ -47,7 +45,7 @@ int ConsoleHost::loadEffect(char* path)
 	}
 }
 
-int ConsoleHost::loadInstrument(char* path)
+int ConsoleHost::loadInstrument(std::string& path)
 {
 	if (hostInitialised)
 	{
@@ -61,7 +59,6 @@ int ConsoleHost::loadInstrument(char* path)
 
 }
 
-//not going to do init checks in these as they get called too much
 float* ConsoleHost::processFxAudio(int vstIndex, float* audioThrough, long numFrames, int numChannels)
 {
 	return vstHost->getEffect(vstIndex).processAudio(audioThrough, numFrames, numChannels);

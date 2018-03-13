@@ -5,10 +5,11 @@ VstHost::VstHost()
 
 }
 
-int VstHost::loadEffect(char* path)
+int VstHost::loadEffect(std::string& path)
 {
 	//VSTEffect effect(pluginUtility.GetWC(path), this);
-	VSTEffect effect(_T("C:\\Users\\chriswratt\\Documents\\UnityProjects\\UnityMidiLib\\VSTHostUnity\\VSTHostUnity\\TAL-Reverb-2.dll"), this);
+	VSTEffect effect(path, *this);
+	//"C:\\Users\\chriswratt\\Documents\\UnityProjects\\UnityMidiLib\\VSTHostUnity\\VSTHostUnity\\TAL-Reverb-2.dll"
 	
 	int index = audioEffects.size(); //0 indexed
 	effect.setVstIndex(index);
@@ -16,9 +17,9 @@ int VstHost::loadEffect(char* path)
 	return index; 
 }
 
-int VstHost::loadInstrument(char* path)
+int VstHost::loadInstrument(std::string& path)
 {
-	VSTi instrument(pluginUtility.GetWC(path), this);
+	VSTi instrument(path, *this);
 	int index = audioEffects.size();
 	instrument.setVstIndex(index);
 	instruments.push_back(instrument);
@@ -38,11 +39,7 @@ VSTEffect& VstHost::getEffect(int index)
 	}
 	else
 	{
-#ifdef isUnityDLL
 		Debug::Log("Error: trying to access non-existent audio effect");
-#elif isConsoleVersion
-		cout << "Error: trying to access non-existent audio effect" << endl;
-#endif
 		return audioEffects[index];
 	}
 }
@@ -55,29 +52,7 @@ VSTi& VstHost::getInstrument(int index)
 	}
 	else
 	{
-#ifdef isUnityDLL
 	Debug::Log("Error: trying to access non-existent vst instrument");
-#elif isConsoleVersion
-		cout << "Error: trying to access non-existent vst instrument"  << endl;
-#endif
 		return instruments[index];
 	}
-}
-	
-const wchar_t* PluginUtility::GetWC(const char *c)
-{
-	const size_t cSize = strlen(c) + 1;
-	if (wc != nullptr)
-	{
-		delete(wc);
-	}
-	wc = new wchar_t[cSize];
-	mbstowcs(wc, c, cSize);
-
-	return wc;
-}
-
-PluginUtility::~PluginUtility()
-{
-	delete(wc);
 }

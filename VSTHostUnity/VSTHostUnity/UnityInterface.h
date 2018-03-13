@@ -18,9 +18,5 @@ extern "C" {
 	VSTEXPORT int loadInstrument(char* path);
 	VSTEXPORT float* processFxAudio(int vstIndex, float* audioThrough, long numFrames, int numChannels);
 	VSTEXPORT float* processInstAudio(int vstIndex, long numFrames, int numChannels);
-
-	//Debugger
-	typedef void(*FuncCallBack)(const char* message, int color, int size);
-	static FuncCallBack callbackInstance = nullptr;
-	VSTEXPORT void RegisterDebugCallback(FuncCallBack cb);
 }
+

@@ -1,6 +1,6 @@
 #include "VSTEffect.h"
 
-VSTEffect::VSTEffect(const wchar_t* path, VstBasicParams* p_hostParams) : VSTBase(path)
+VSTEffect::VSTEffect(std::string& path, VstBasicParams& p_hostParams) : VSTBase(path)
 {
 	hostParams = p_hostParams;
 	initializeIO();
@@ -10,25 +10,14 @@ VSTEffect::VSTEffect(const wchar_t* path, VstBasicParams* p_hostParams) : VSTBas
 VSTEffect::~VSTEffect()
 {
 	plugin->dispatcher(plugin, effMainsChanged, 0, 0, NULL, 0.0f);
-	for (int i = 0; i < getNumPluginInputs(); i++)
-	{
-		free(pluginInputs[i]);
-	}
-	free(pluginInputs);
-
-	for (int i = 0; i < getNumPluginOutputs(); i++)
-	{
-		free(pluginOutputs[i]);
-	}
-	free(pluginOutputs);
 }
 
 float* VSTEffect::processAudio(float* audioThrough, long numFrames, int numChannels)
 {
-	silenceChannel(pluginInputs, pluginNumInputs, numFrames);
-	silenceChannel(pluginOutputs, pluginNumOutputs, numFrames);
-
+	silenceChannel(pluginInputs);
+	silenceChannel(pluginOutputs);
 	/////////de-interleaver////////
+
 	int j = 0;
 	for (int samp = 0; samp < numFrames * numChannels; samp += numChannels)
 	{
@@ -54,7 +43,7 @@ float* VSTEffect::processAudio(float* audioThrough, long numFrames, int numChann
 		j++;
 	}
 
-	plugin->processReplacing(plugin, pluginInputs, pluginOutputs, numFrames);
+	plugin->processReplacing(plugin, pluginInputsStartPtr, pluginOutputsStartPtr, numFrames);
 
 	/////////re-interleaver////////
 	j = 0;
@@ -84,26 +73,48 @@ float* VSTEffect::processAudio(float* audioThrough, long numFrames, int numChann
 }
 
 void VSTEffect::initializeIO() {
+	
+	std::vector<float> tempVect;
+	tempVect.reserve(hostParams.blocksize);
+	for (int i = 0; i < hostParams.blocksize; i++)
+	{
+		tempVect.push_back(0.0f);
+	}
 
-	pluginInputs = (float**)malloc(sizeof(float*) * plugin->numInputs);
-	pluginOutputs = (float**)malloc(sizeof(float*) * plugin->numOutputs);
-	for (int channel = 0; channel < plugin->numInputs; channel++) {
-		pluginInputs[channel] = (float*)malloc(sizeof(float) * hostParams->blocksize);
+	for (int i = 0; i < plugin->numInputs; i++)
+	{
+		pluginInputs.push_back(tempVect);
 	}
-	for (int channel = 0; channel < plugin->numOutputs; channel++) {
-		pluginOutputs[channel] = (float*)malloc(sizeof(float) * hostParams->blocksize);
+	for (int i = 0; i < plugin->numOutputs; i++)
+	{
+		pluginOutputs.push_back(tempVect);
 	}
+	
+	//hold locations of starts of i/o vectors as raw float** in order to access for plugin.processReplacing
+	std::vector<float*> target(pluginInputs.size());
+	for (int i = 0; i < pluginInputs.size(); i++)
+	{
+		target[i] = &*pluginInputs[i].begin();
+	}
+	pluginInputsStartPtr = (float**)malloc((sizeof(float*) * 2));
+	pluginInputsStartPtr[0] = target[0];
+	pluginInputsStartPtr[1] = target[1];
+
+	std::vector<float*> target2(pluginOutputs.size());
+	for (int i = 0; i < pluginOutputs.size(); i++)
+	{
+		target2[i] = &*pluginOutputs[i].begin();
+	}
+	pluginOutputsStartPtr = (float**)malloc((sizeof(float*) * 2));
+	pluginOutputsStartPtr[0] = target2[0];
+	pluginOutputsStartPtr[1] = target2[1];
 }
 
 int VSTEffect::getNumPluginInputs()
 {
 	if (pluginNumInputs == -1)
 	{
-#ifdef isUnityDLL
 		Debug::Log("Error, plugin inputs not initialised");
-#elif isConsoleVersion
-		cout << "Error, plugin inputs not initialised" << endl;
-#endif
 		return pluginNumInputs;
 	}
 	else
@@ -116,11 +127,7 @@ int VSTEffect::getNumPluginOutputs()
 {
 	if (pluginNumOutputs == -1)
 	{
-#ifdef isUnityDLL
 		Debug::Log("Error, plugin outputs not initialised");
-#elif isConsoleVersion
-		cout << "Error, plugin outputs not initialised" << endl;
-#endif
 		return pluginNumOutputs;
 	}
 	else

@@ -1,7 +1,6 @@
 #include "VSTi.h"
 
-
-VSTi::VSTi(const wchar_t* path, VstBasicParams* p_hostParams) : VSTBase(path)
+VSTi::VSTi(std::string path, VstBasicParams& p_hostParams) : VSTBase(path)
 {
 	hostParams = p_hostParams;
 	initializeIO();
@@ -12,15 +11,11 @@ VSTi::~VSTi()
 {
 	plugin->dispatcher(plugin, effMainsChanged, 0, 0, NULL, 0.0f);
 	free(multEventsHolder);
-	for (int i = 0; i < getNumPluginOutputs(); i++)
-	{
-		free(pluginOutputs[i]);
-	}
-	free(pluginOutputs);
 }
 
 float* VSTi::processAudio(long numFrames, int numChannels)
 {
+	silenceChannel(pluginOutputs);
 	return nullptr;
 }
 
@@ -31,24 +26,33 @@ void VSTi::setNumInOut()
 
 void VSTi::initializeIO() {
 
-	//dynamic allocation for varible size struct
-	multEventsHolder = (VstEvents*)malloc((sizeof(struct VstEvents) + sizeof(eventHolder)));
-
-	pluginOutputs = (float**)malloc(sizeof(float**) * plugin->numOutputs);
-	for (int channel = 0; channel < plugin->numOutputs; channel++) {
-		pluginOutputs[channel] = (float*)malloc(sizeof(float) * hostParams->blocksize);
+	std::vector<float> tempVect;
+	tempVect.reserve(hostParams.blocksize);
+	for (int i = 0; i < hostParams.blocksize; i++)
+	{
+		tempVect.push_back(0.0f);
 	}
+	for (int i = 0; i < plugin->numOutputs; i++)
+	{
+		pluginOutputs.push_back(tempVect);
+	}
+
+	//hold locations of starts of i/o vectors as raw float** in order to access for plugin.processReplacing
+	std::vector<float*> target2(pluginOutputs.size());
+	for (int i = 0; i < pluginOutputs.size(); i++)
+	{
+		target2[i] = &*pluginOutputs[i].begin();
+	}
+	pluginOutputsStartPtr = (float**)malloc((sizeof(float*) * 2));
+	pluginOutputsStartPtr[0] = target2[0];
+	pluginOutputsStartPtr[1] = target2[1];
 }
 
 int VSTi::getNumPluginOutputs()
 {
 	if (pluginNumOutputs == -1)
 	{
-#ifdef isUnityDLL
 		Debug::Log("Error, plugin outputs not initialised");
-#elif isConsoleVersion
-		cout << "Error, plugin outputs not initialised" << endl;
-#endif
 		return pluginNumOutputs;
 	}
 	else

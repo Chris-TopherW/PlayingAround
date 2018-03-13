@@ -8,22 +8,61 @@
 #include <memory>
 #include "HostGlobals.h"
 
+#define TEMP_PARAM_NAME_SIZE 128
+
 class VstBasicParams
 {
 public:
 	int blocksize;
 	int samplerate;
 	VstBasicParams();
-	//static std::vector<std::vector<float>> inputsHolder;
-	//static std::vector<std::vector<float>> outputsHolder;
+};
+
+class VSTBase
+{
+public:
+	VSTBase(std::string& pluginPath);
+	int getNumParams();
+	void setParam(int paramIndex, float p_value);
+	float getParam(int index);
+	std::string& getParamName(int index);
+	void setVstIndex(int p_index);
+
+protected:
+
+	AEffect* plugin = NULL;
+	void silenceChannel(std::vector<std::vector<float>> channelData);
+	void startPlugin();
+	void resumePlugin();
+	void suspendPlugin();
+	bool canPluginDo(char *canDoString);
+	VstBasicParams hostParams;
+	int vstIndex = -1;
+	int pluginNumInputs = 0;
+	int pluginNumOutputs = 0;
+	
+private:
+
+	//char** paramNames;
+	std::vector<std::string> paramNames;
+	//std::vector<std::string> paramNames;
+
+	void loadPlugin(std::string& path);
+	int configurePluginCallbacks();
+	virtual void initializeIO() = 0;
+	char tempParamName[TEMP_PARAM_NAME_SIZE];
+	
 };
 
 extern "C"
 {
+	VstIntPtr hostCallback(AEffect *effect, VstInt32 opcode, VstInt32 index,
+		VstIntPtr value, void *ptr, float opt);
 	// Plugin's entry point
 	typedef AEffect *(*vstPluginFuncPtr)(audioMasterCallback host);
 	// Plugin's dispatcher function
-	typedef VstIntPtr(*dispatcherFuncPtr)(AEffect* effect, VstInt32 opcode, VstInt32 index, VstIntPtr value, void* ptr, float opt);
+	typedef VstIntPtr(*dispatcherFuncPtr)(AEffect *effect, VstInt32 opCode,
+		VstInt32 index, VstInt32 value, void *ptr, float opt);
 	// Plugin's getParameter() method
 	typedef float(*getParameterFuncPtr)(AEffect *effect, VstInt32 index);
 	// Plugin's setParameter() method
@@ -33,45 +72,4 @@ extern "C"
 	// Plugin's process() method
 	typedef void(*processFuncPtr)(AEffect *effect, float **inputs,
 		float **outputs, VstInt32 sampleFrames);
-}
-
-class VSTBase
-{
-public:
-	VSTBase(const wchar_t* pluginPath);
-	~VSTBase();
-	int getNumParams();
-	void setParam(int paramIndex, float p_value);
-	float getParam(int index);
-	char* getParamName(int index);
-	void setVstIndex(int p_index);
-
-protected:
-
-	AEffect* plugin = NULL;
-	void silenceChannel(float **channelData, int numChannels, long numFrames);
-	void startPlugin();
-	void resumePlugin();
-	void suspendPlugin();
-	bool canPluginDo(char *canDoString);
-	VstBasicParams* hostParams;
-	int vstIndex = -1;
-	int pluginNumInputs = 0;
-	int pluginNumOutputs = 0;
-	
-private:
-
-	char** paramNames;
-	//std::vector<std::string> paramNames;
-
-	void loadPlugin(const wchar_t* path);
-	int configurePluginCallbacks();
-	virtual void initializeIO() = 0;
-	
-};
-
-extern "C"
-{
-	VstIntPtr hostCallback(AEffect *effect, VstInt32 opcode, VstInt32 index,
-		VstIntPtr value, void *ptr, float opt);
 }
