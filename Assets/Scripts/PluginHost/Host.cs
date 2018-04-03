@@ -26,11 +26,16 @@ namespace pluginHost
         }
     }
 
+    [ExecuteInEditMode]
     public class Host : MonoBehaviour
     {
         private void Awake()
         {
             pluggoHost.init();
+        }
+        private void OnApplicationQuit()
+        {
+            HostDllCpp.clearVSTs();
         }
     }
 }

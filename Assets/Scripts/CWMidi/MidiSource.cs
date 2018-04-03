@@ -89,6 +89,8 @@ public class MidiSource : MonoBehaviour {
     //}
 }
 
+#if UNITY_EDITOR
+
 // Custom Editor using SerializedProperties.
 // Automatic handling of multi-object editing, undo, and prefab overrides.
 [CustomEditor(typeof(MidiSource))]
@@ -151,3 +153,5 @@ public class MyPlayerEditor : Editor
         serializedObject.ApplyModifiedProperties();
     }
 }
+
+#endif

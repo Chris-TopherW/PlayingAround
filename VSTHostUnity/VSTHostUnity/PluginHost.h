@@ -14,6 +14,7 @@ public:
 	static std::vector<std::vector<float>> inputsHolder;
 	static std::vector<std::vector<float>> outputsHolder;
 	inline int getAudioFxVecSize() { return audioEffects.size(); }
+	void clearVSTs();
 		
 private:
 	std::vector<std::shared_ptr<VSTEffect>> audioEffects;

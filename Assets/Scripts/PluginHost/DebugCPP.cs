@@ -3,6 +3,8 @@ using System;
 using System.Runtime.InteropServices;
 using UnityEngine;
 
+#if UNITY_EDITOR
+
 public class DebugCPP : MonoBehaviour
 {
 
@@ -37,3 +39,5 @@ public class DebugCPP : MonoBehaviour
         UnityEngine.Debug.Log(debug_string);
     }
 }
+
+#endif

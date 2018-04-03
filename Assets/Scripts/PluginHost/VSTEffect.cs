@@ -4,12 +4,14 @@ using System;
 
 namespace pluginHost
 {
+    [ExecuteInEditMode]
     public class VSTEffect : MonoBehaviour
     {
         //public 
-        string pluginPath;
-        int thisVSTIndex = 0;
+        public string pluginPath;
+        private int thisVSTIndex = 0;
 
+        [Space]
         //////////////////////  params  //////////////////////
         public int numParams;
         [Range(0.0f, 1.0f)]
@@ -18,8 +20,7 @@ namespace pluginHost
         public string[] paramNames;
 
         //////////////////////  audio io  //////////////////////
-        private float[][] inputArray;
-        private float[][] outputArray;
+        private float[][] audioThroughArray;
         private int numPluginInputs;
         private int numPluginOutputs;
 
@@ -33,7 +34,9 @@ namespace pluginHost
 
         void Awake()
         {
-            //only first character is getting through!
+            if (ready)
+                return;
+
             pluginPath = "C:\\Users\\chriswratt\\Documents\\UnityProjects\\UnityMidiLib\\VSTHostUnity\\VSTHostUnity\\TAL-Reverb-2.dll";
             thisVSTIndex = loadEffect(pluginPath);
             if(thisVSTIndex == -1)
@@ -42,11 +45,10 @@ namespace pluginHost
                 pluginFailedToLoad = true;
                 return;
             }
-            Debug.Log("Vst index = " + thisVSTIndex);
             setupParams();
             setupIO();
 
-            audioPtrSize = Marshal.SizeOf(inputArray[0][0]) * inputArray[0].Length * inputArray.Length;
+            audioPtrSize = Marshal.SizeOf(audioThroughArray[0][0]) * audioThroughArray[0].Length * audioThroughArray.Length;
             inputArrayAsVoidPtr = Marshal.AllocHGlobal(audioPtrSize);
             messagePtrSize = 8 * 256;
             messageAsVoidPtr = Marshal.AllocHGlobal(messagePtrSize);
@@ -83,15 +85,10 @@ namespace pluginHost
             ////////////////////// alloc space for audio io //////////////////////
             numPluginInputs = HostDllCpp.getNumPluginInputs(thisVSTIndex);
             numPluginOutputs = HostDllCpp.getNumPluginOutputs(thisVSTIndex);
-            inputArray = new float[numPluginInputs][];
+            audioThroughArray = new float[numPluginInputs][];
             for (int i = 0; i < numPluginInputs; i++)
             {
-                inputArray[i] = new float[pluggoHost.blockSize];
-            }
-            outputArray = new float[numPluginOutputs][];
-            for (int i = 0; i < numPluginOutputs; i++)
-            {
-                outputArray[i] = new float[pluggoHost.blockSize];
+                audioThroughArray[i] = new float[pluggoHost.blockSize];
             }
 
             if (HostDllCpp.getNumPluginInputs(thisVSTIndex) != HostDllCpp.getNumPluginOutputs(thisVSTIndex))
@@ -132,6 +129,7 @@ namespace pluginHost
         {
             Marshal.FreeHGlobal(inputArrayAsVoidPtr);
             Marshal.FreeHGlobal(messageAsVoidPtr);
+            ready = false;
         }
     }
 }

@@ -51,3 +51,9 @@ std::shared_ptr<VSTi> VstHost::getInstrument(int index)
 		return instruments[index];
 	}
 }
+
+void VstHost::clearVSTs()
+{
+	audioEffects.clear();
+	instruments.clear();
+}

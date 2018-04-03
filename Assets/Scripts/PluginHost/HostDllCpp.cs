@@ -51,13 +51,9 @@ namespace pluginHost
         [DllImport(cppDllName, EntryPoint = "getNumPluginOutputs", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public static extern int getNumPluginOutputs(int vstIndex);
 
+        //////////////////////////////////////clean up///////////////////////////////////////
 
-
-        /////////////////////////basic debug//////////////////////////////
-        [DllImport(cppDllName, EntryPoint = "getEffectVectorSize", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-        public static extern int getEffectVectorSize();
-
-        [DllImport(cppDllName, EntryPoint = "getHostNumRef", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-        public static extern int getHostNumRef();
+        [DllImport(cppDllName, EntryPoint = "clearVSTs", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void clearVSTs();
     }
 }

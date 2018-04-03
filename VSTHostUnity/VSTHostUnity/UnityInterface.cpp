@@ -131,15 +131,7 @@ int setParam(int vstIndex, int paramIndex, float p_value)
 	else return 0;
 }
 
-
-///////////////////////////////////Debug////////////////////////////////////////////
-
-int getEffectVectorSize()
+void clearVSTs()
 {
-	return vstHost->getAudioFxVecSize();
-}
-
-int getHostNumRef()
-{
-	return vstHost.use_count();
+	vstHost->clearVSTs();
 }

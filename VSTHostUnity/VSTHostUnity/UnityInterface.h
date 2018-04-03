@@ -24,8 +24,5 @@ extern "C" {
 	VSTEXPORT float getParam(int vstIndex, int paramIndex);
 	VSTEXPORT char* getParamName(int vstIndex, int paramIndex);
 	VSTEXPORT int setParam(int vstIndex, int paramIndex, float p_value);
-
-	//debugging stuff
-	VSTEXPORT int getEffectVectorSize();
-	VSTEXPORT int getHostNumRef();
+	VSTEXPORT void clearVSTs();
 }
