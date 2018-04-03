@@ -4,7 +4,7 @@
 class VSTi : public VSTBase
 {
 public:
-	VSTi(std::string path, VstBasicParams& p_host);
+	VSTi(std::string path, int p_samplerate, int p_blocksize);
 	~VSTi();
 	float* processAudio(long numFrames, int numChannels);
 	void midiEvent(int status, int mess1, int mess2, long delaySamps);

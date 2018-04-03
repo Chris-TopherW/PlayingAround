@@ -1,10 +1,14 @@
 #include "VSTEffect.h"
 
-VSTEffect::VSTEffect(std::string& path, VstBasicParams& p_hostParams) : VSTBase(path)
+VSTEffect::VSTEffect(std::string& path, int p_samplerate, int p_blocksize) : VSTBase(path)
 {
-	hostParams = p_hostParams;
-	initializeIO();
-	startPlugin();
+	samplerate = p_samplerate;
+	blocksize = p_blocksize;
+	if (getPluginReady())
+	{
+		initializeIO();
+		startPlugin();
+	}
 }
 
 VSTEffect::~VSTEffect()
@@ -75,8 +79,8 @@ float* VSTEffect::processAudio(float* audioThrough, long numFrames, int numChann
 void VSTEffect::initializeIO() {
 	
 	std::vector<float> tempVect;
-	tempVect.reserve(hostParams.blocksize);
-	for (int i = 0; i < hostParams.blocksize; i++)
+	tempVect.reserve(blocksize);
+	for (int i = 0; i < blocksize; i++)
 	{
 		tempVect.push_back(0.0f);
 	}

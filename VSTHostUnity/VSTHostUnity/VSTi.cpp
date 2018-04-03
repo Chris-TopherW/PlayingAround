@@ -1,10 +1,14 @@
 #include "VSTi.h"
 
-VSTi::VSTi(std::string path, VstBasicParams& p_hostParams) : VSTBase(path)
+VSTi::VSTi(std::string path, int p_samplerate, int p_blocksize) : VSTBase(path)
 {
-	hostParams = p_hostParams;
-	initializeIO();
-	startPlugin();
+	samplerate = p_samplerate;
+	blocksize = p_blocksize;
+	if (getPluginReady())
+	{
+		initializeIO();
+		startPlugin();
+	}
 }
 
 VSTi::~VSTi()
@@ -27,8 +31,8 @@ void VSTi::setNumInOut()
 void VSTi::initializeIO() {
 
 	std::vector<float> tempVect;
-	tempVect.reserve(hostParams.blocksize);
-	for (int i = 0; i < hostParams.blocksize; i++)
+	tempVect.reserve(blocksize);
+	for (int i = 0; i < blocksize; i++)
 	{
 		tempVect.push_back(0.0f);
 	}

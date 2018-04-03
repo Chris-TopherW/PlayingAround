@@ -1,29 +1,24 @@
 #include "PluginHost.h"
 
-VstHost::VstHost()
-{
-
-}
-
 int VstHost::loadEffect(std::string& path)
 {
-	//VSTEffect effect(pluginUtility.GetWC(path), this);
-	VSTEffect effect(path, *this);
-	//"C:\\Users\\chriswratt\\Documents\\UnityProjects\\UnityMidiLib\\VSTHostUnity\\VSTHostUnity\\TAL-Reverb-2.dll"
+	std::shared_ptr<VSTEffect> vstEffect = std::make_shared<VSTEffect>(path, samplerate, blocksize);
+	int vstIndex = audioEffects.size();
 	
-	int index = audioEffects.size(); //0 indexed
-	effect.setVstIndex(index);
-	audioEffects.push_back(effect);
-	return index; 
+	vstEffect->setVstIndex(vstIndex);
+	audioEffects.push_back(vstEffect);
+	Debug::Log("audio effects array size = ");
+	Debug::Log((int)audioEffects.size());
+	return vstIndex;
 }
 
 int VstHost::loadInstrument(std::string& path)
 {
-	VSTi instrument(path, *this);
-	int index = audioEffects.size();
-	instrument.setVstIndex(index);
-	instruments.push_back(instrument);
-	return index;
+	std::shared_ptr<VSTi> vstInst = std::make_shared<VSTi>(path, samplerate, blocksize);
+	int vstIndex = audioEffects.size();
+	vstInst->setVstIndex(vstIndex);
+	instruments.push_back(vstInst);
+	return vstIndex;
 }
 
 void VstHost::setBlockSize(int p_blocksize)
@@ -31,20 +26,20 @@ void VstHost::setBlockSize(int p_blocksize)
 	blocksize = p_blocksize;
 }
 
-VSTEffect& VstHost::getEffect(int index)
+std::shared_ptr<VSTEffect> VstHost::getEffect(int vstIndex)
 {
-	if (audioEffects.size() >= index)
+	if (audioEffects.size() >= vstIndex)
 	{
-		return audioEffects[index];
+		return audioEffects[vstIndex];
 	}
 	else
 	{
 		Debug::Log("Error: trying to access non-existent audio effect");
-		return audioEffects[index];
+		return audioEffects[vstIndex];
 	}
 }
 
-VSTi& VstHost::getInstrument(int index)
+std::shared_ptr<VSTi> VstHost::getInstrument(int index)
 {
 	if (instruments.size() >= index)
 	{

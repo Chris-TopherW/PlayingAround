@@ -1,21 +1,137 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using System.Runtime.InteropServices;
+using System;
 
-public class VSTEffect : MonoBehaviour {
+namespace pluginHost
+{
+    public class VSTEffect : MonoBehaviour
+    {
+        //public 
+        string pluginPath;
+        int thisVSTIndex = 0;
 
-    //////////////////////  params  //////////////////////
-    public int numParams;
-    [Range(0.0f, 1.0f)]
-    public float[] parameters;
-    private float[] previousParams;
-    public string[] paramNames;
+        //////////////////////  params  //////////////////////
+        public int numParams;
+        [Range(0.0f, 1.0f)]
+        public float[] parameters;
+        private float[] previousParams;
+        public string[] paramNames;
 
-    void Start () {
-		
-	}
-	
-	void Update () {
-		
-	}
+        //////////////////////  audio io  //////////////////////
+        private float[][] inputArray;
+        private float[][] outputArray;
+        private int numPluginInputs;
+        private int numPluginOutputs;
+
+        ////////////////////// interop //////////////////////
+        private int audioPtrSize;
+        private IntPtr inputArrayAsVoidPtr;
+        private int messagePtrSize;
+        private IntPtr messageAsVoidPtr;
+        private bool ready = false;
+        private bool pluginFailedToLoad = false;
+
+        void Awake()
+        {
+            //only first character is getting through!
+            pluginPath = "C:\\Users\\chriswratt\\Documents\\UnityProjects\\UnityMidiLib\\VSTHostUnity\\VSTHostUnity\\TAL-Reverb-2.dll";
+            thisVSTIndex = loadEffect(pluginPath);
+            if(thisVSTIndex == -1)
+            {
+                Debug.Log("Error, VST has failed to load. Unsupported file path");
+                pluginFailedToLoad = true;
+                return;
+            }
+            Debug.Log("Vst index = " + thisVSTIndex);
+            setupParams();
+            setupIO();
+
+            audioPtrSize = Marshal.SizeOf(inputArray[0][0]) * inputArray[0].Length * inputArray.Length;
+            inputArrayAsVoidPtr = Marshal.AllocHGlobal(audioPtrSize);
+            messagePtrSize = 8 * 256;
+            messageAsVoidPtr = Marshal.AllocHGlobal(messagePtrSize);
+
+            ready = true;
+        }
+
+        void Update()
+        {
+            if (pluginFailedToLoad) return;
+
+            for (int i = 0; i < numParams; i++)
+            {
+                if (previousParams[i] != parameters[i])
+                {
+                    HostDllCpp.setParam(thisVSTIndex, i, parameters[i]);
+                    previousParams[i] = parameters[i];
+                }
+            }
+        }
+        
+        void OnAudioFilterRead(float[] data, int channels)
+        {
+            if (!ready) return;
+            if (pluginFailedToLoad) return;
+
+            Marshal.Copy(data, 0, inputArrayAsVoidPtr, pluggoHost.blockSize * channels);
+            IntPtr outputVoidPtr = HostDllCpp.processFxAudio(thisVSTIndex, inputArrayAsVoidPtr, pluggoHost.blockSize, channels);
+            Marshal.Copy(outputVoidPtr, data, 0, pluggoHost.blockSize * channels);
+        }
+
+        void setupIO()
+        {
+            ////////////////////// alloc space for audio io //////////////////////
+            numPluginInputs = HostDllCpp.getNumPluginInputs(thisVSTIndex);
+            numPluginOutputs = HostDllCpp.getNumPluginOutputs(thisVSTIndex);
+            inputArray = new float[numPluginInputs][];
+            for (int i = 0; i < numPluginInputs; i++)
+            {
+                inputArray[i] = new float[pluggoHost.blockSize];
+            }
+            outputArray = new float[numPluginOutputs][];
+            for (int i = 0; i < numPluginOutputs; i++)
+            {
+                outputArray[i] = new float[pluggoHost.blockSize];
+            }
+
+            if (HostDllCpp.getNumPluginInputs(thisVSTIndex) != HostDllCpp.getNumPluginOutputs(thisVSTIndex))
+            {
+                Debug.Log("Warning, plugin inputs does not equal plugin outputs");
+            }
+        }
+
+        void setupParams()
+        {
+            numParams = HostDllCpp.getNumParams(thisVSTIndex);
+            parameters = new float[numParams];
+            previousParams = new float[numParams];
+            paramNames = new string[numParams];
+            for (int i = 0; i < numParams; i++)
+            {
+                parameters[i] = HostDllCpp.getParam(thisVSTIndex, i);
+                previousParams[i] = parameters[i];
+                paramNames[i] = getParameterName(i);
+            }
+        }
+
+        public string getParameterName(int paramIndex)
+        {
+            IntPtr p_paramName = HostDllCpp.getParamName(thisVSTIndex, paramIndex);
+            return Marshal.PtrToStringAnsi(p_paramName);
+        }
+
+        public int loadEffect(string path)
+        {
+            IntPtr intPtr_aux = Marshal.StringToHGlobalAnsi(path);
+            int effectIndex = HostDllCpp.loadEffect(intPtr_aux);
+            Marshal.FreeHGlobal(intPtr_aux);
+            return effectIndex;
+        }
+
+        public void OnApplicationQuit()
+        {
+            Marshal.FreeHGlobal(inputArrayAsVoidPtr);
+            Marshal.FreeHGlobal(messageAsVoidPtr);
+        }
+    }
 }

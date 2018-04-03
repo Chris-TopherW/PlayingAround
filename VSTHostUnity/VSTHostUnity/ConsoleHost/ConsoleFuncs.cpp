@@ -7,7 +7,7 @@ void ConsoleHost::initHost()
 {
 	if (!hostInitialised)
 	{
-		vstHost = std::make_shared<VstHost>();
+		vstHost = std::make_unique<VstHost>();
 		hostInitialised = true;
 	}
 	else
@@ -61,10 +61,10 @@ int ConsoleHost::loadInstrument(std::string& path)
 
 float* ConsoleHost::processFxAudio(int vstIndex, float* audioThrough, long numFrames, int numChannels)
 {
-	return vstHost->getEffect(vstIndex).processAudio(audioThrough, numFrames, numChannels);
+	return vstHost->getEffect(vstIndex)->processAudio(audioThrough, numFrames, numChannels);
 }
 
 float* ConsoleHost::processInstAudio(int vstIndex, long numFrames, int numChannels)
 {
-	return vstHost->getInstrument(vstIndex).processAudio(numFrames, numChannels);
+	return vstHost->getInstrument(vstIndex)->processAudio(numFrames, numChannels);
 }

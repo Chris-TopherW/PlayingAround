@@ -8,8 +8,15 @@ VstBasicParams::VstBasicParams() :
 
 VSTBase::VSTBase(std::string& pluginPath)
 {
-	loadPlugin(pluginPath);
-	configurePluginCallbacks();
+	if (loadPlugin(pluginPath))
+	{
+		if (configurePluginCallbacks() != -1)
+		{
+			pluginReady = true;
+		}
+		else Debug::Log("Error: Plugin Failed to configure callbacks"); 
+	}
+	else Debug::Log("Error, plugin failed to load");
 }
 
 void VSTBase::silenceChannel(std::vector<std::vector<float>> channelData) {
@@ -21,7 +28,7 @@ void VSTBase::silenceChannel(std::vector<std::vector<float>> channelData) {
 	}
 }
 
-void VSTBase::loadPlugin(std::string& path) {
+int VSTBase::loadPlugin(std::string& path) {
 	Debug::Log("load plugin called");
 	std::wstring widestr = std::wstring(path.begin(), path.end());
 	const wchar_t* widecstr = widestr.c_str();
@@ -47,15 +54,20 @@ void VSTBase::loadPlugin(std::string& path) {
 	{
 		Debug::Log("C: Failed trying to load VST", Color::Black);
 		plugin = NULL;
-		return;
+		return 0;
 	}
 
 	plugin = mainEntryPoint(hostCallback);
-	if (plugin == NULL) Debug::Log("Error, falied to instantiate plugin"); 
+	if (plugin == NULL)
+	{
+		Debug::Log("Error, falied to instantiate plugin");
+		return 0;
+	}
 	else Debug::Log("Plugin instantiated");
 	pluginNumInputs = plugin->numInputs;
 	pluginNumOutputs = plugin->numOutputs;
 	Debug::Log("In out setup");
+	return 1;
 } 
 
 int VSTBase::configurePluginCallbacks(/*AEffect *plugin*/) {
@@ -77,6 +89,7 @@ int VSTBase::configurePluginCallbacks(/*AEffect *plugin*/) {
 		if (dispatcher == NULL)
 		{
 			Debug::Log("C: dispatcher is NULL\n", Color::Black);
+			return -1;
 		}
 
 		//0 out char array
@@ -99,12 +112,9 @@ int VSTBase::configurePluginCallbacks(/*AEffect *plugin*/) {
 
 int VSTBase::getNumParams()
 {
-	if (plugin == NULL)
-	{
-		Debug::Log("Error, no plugin");
-		return 0;
-	}
-	return plugin->numParams;
+	if (plugin == nullptr) return -1;
+
+	else return plugin->numParams;
 }
 
 void VSTBase::setParam(int paramIndex, float p_value)
@@ -133,7 +143,7 @@ void VSTBase::startPlugin(/*AEffect *plugin*/) {
 	// Set some default properties
 	float sampleRate = 44100.0f; ////////////////////////////this needs to come from Unity!!!!!! 
 	plugin->dispatcher(plugin, effSetSampleRate, 0, 0, NULL, sampleRate);
-	plugin->dispatcher(plugin, effSetBlockSize, 0, hostParams.blocksize, NULL, 0.0f);
+	plugin->dispatcher(plugin, effSetBlockSize, 0, blocksize, NULL, 0.0f);
 	//plugin->dispatcher(plugin, effSet)
 	resumePlugin(/*plugin*/);
 }

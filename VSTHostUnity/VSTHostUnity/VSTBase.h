@@ -27,6 +27,7 @@ public:
 	float getParam(int index);
 	std::string& getParamName(int index);
 	void setVstIndex(int p_index);
+	bool inline getPluginReady() { return pluginReady; }
 
 protected:
 
@@ -36,22 +37,20 @@ protected:
 	void resumePlugin();
 	void suspendPlugin();
 	bool canPluginDo(char *canDoString);
-	VstBasicParams hostParams;
+	int samplerate;
+	int blocksize;
 	int vstIndex = -1;
 	int pluginNumInputs = 0;
 	int pluginNumOutputs = 0;
+	bool pluginReady = false;
 	
 private:
 
-	//char** paramNames;
 	std::vector<std::string> paramNames;
-	//std::vector<std::string> paramNames;
-
-	void loadPlugin(std::string& path);
+	int loadPlugin(std::string& path);
 	int configurePluginCallbacks();
 	virtual void initializeIO() = 0;
 	char tempParamName[TEMP_PARAM_NAME_SIZE];
-	
 };
 
 extern "C"

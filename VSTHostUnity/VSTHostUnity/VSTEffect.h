@@ -4,7 +4,7 @@
 class VSTEffect : public VSTBase
 {
 public:
-	VSTEffect(std::string& path, VstBasicParams& p_hostParams);
+	VSTEffect(std::string& path, int blocksize, int samplerate);
 	~VSTEffect();
 	float* processAudio(float* audioThrough, long numFrames, int numChannels);
 	int getNumPluginInputs();

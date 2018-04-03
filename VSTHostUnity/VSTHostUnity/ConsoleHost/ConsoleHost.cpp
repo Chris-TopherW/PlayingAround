@@ -22,4 +22,9 @@ int main()
 	someSound[0] = 0.0f;
 	consoleHost.processFxAudio(effectIndex, someSound, 1, 1);
 	Debug::Log("Audio through");
+	Debug::Log("Host num refs: ");
+	Debug::Log(consoleHost.vstHost.use_count());
+	Debug::Log("End, size of effects array: ");
+	Debug::Log(consoleHost.vstHost->getAudioFxVecSize());
+
 }
