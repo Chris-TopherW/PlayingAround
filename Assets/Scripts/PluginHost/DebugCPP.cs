@@ -7,11 +7,18 @@ using UnityEngine;
 
 public class DebugCPP : MonoBehaviour
 {
-
+    public bool showNativeDebug = true;
+    private static bool staticAllowDebug = true;
     // Use this for initialization
     void OnEnable()
     {
         RegisterDebugCallback(OnDebugCallback);
+        staticAllowDebug = showNativeDebug;
+    }
+
+    private void Update()
+    {
+        staticAllowDebug = showNativeDebug;
     }
 
     //------------------------------------------------------------------------------------------------
@@ -23,6 +30,9 @@ public class DebugCPP : MonoBehaviour
     [MonoPInvokeCallback(typeof(debugCallback))]
     static void OnDebugCallback(IntPtr request, int color, int size)
     {
+        if (!staticAllowDebug)
+            return;
+
         //Ptr to string
         string debug_string = Marshal.PtrToStringAnsi(request, size);
 
