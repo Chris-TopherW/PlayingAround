@@ -20,7 +20,7 @@ public class FancyMarkov : MonoBehaviour {
         midiTrack = new MidiTrack();
         midiOutputDevice = MidiPlayer.Start();
         if (Midi.debugLevel > 3) midiFile.printCookedMidiFile();
-        matrix = new TransitionMatrix(midiFile.getMidiTrack(1));
+        matrix = new TransitionMatrix(midiFile.getMidiTrack(0));
         midiSource = GetComponent<MidiSource>();
     }
 

@@ -7,12 +7,19 @@ namespace pluginHost
     [ExecuteInEditMode]
     public class VSTEffect : MonoBehaviour
     {
-        //public 
+        //important stuff 
         public string pluginPath;
         private int thisVSTIndex = 0;
+        [Space]
+
+        [Header("Midi")]
+        public bool midiInput = false;
+        public int midiChannel = 1;
 
         [Space]
+
         //////////////////////  params  //////////////////////
+        [Header("Parameters")]
         public int numParams;
         [Range(0.0f, 1.0f)]
         public float[] parameters;
@@ -37,7 +44,10 @@ namespace pluginHost
             if (ready)
                 return;
 
-            pluginPath = "C:\\Users\\chriswratt\\Documents\\UnityProjects\\UnityMidiLib\\VSTHostUnity\\VSTHostUnity\\TAL-Reverb-2.dll";
+            //pluginPath = "C:\\Users\\chriswratt\\Documents\\UnityProjects\\UnityMidiLib\\VSTHostUnity\\VSTHostUnity\\TAL-Reverb-2.dll";
+            pluginPath = "D:\\UnityProjects\\usingExternalCpp\\VSTHostUnity\\VSTHostUnity\\TAL-Reverb-2.dll";
+            //pluginPath = "D:\\UnityProjects\\usingExternalCpp\\VSTHostUnity\\VSTHostUnity\\TAL-NoiseMaker-64.dll";
+
             thisVSTIndex = loadEffect(pluginPath);
             if(thisVSTIndex == -1)
             {
@@ -59,7 +69,7 @@ namespace pluginHost
         void Update()
         {
             if (pluginFailedToLoad) return;
-
+                
             for (int i = 0; i < numParams; i++)
             {
                 if (previousParams[i] != parameters[i])

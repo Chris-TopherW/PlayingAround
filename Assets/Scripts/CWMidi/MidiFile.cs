@@ -212,6 +212,11 @@ namespace cwMidi
 
         public MidiTrack getMidiTrack(int p_index)
         {
+            if(p_index > midiTracks.Count - 1)
+            {
+                UnityEngine.Debug.Log("Trying to access non-existent track");
+                return null;
+            }
             return midiTracks[p_index];
         }
 

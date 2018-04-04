@@ -20,12 +20,34 @@ VSTi::~VSTi()
 float* VSTi::processAudio(long numFrames, int numChannels)
 {
 	silenceChannel(pluginOutputs);
-	return nullptr;
-}
 
-void VSTi::setNumInOut()
-{ 
-	pluginNumOutputs = plugin->numOutputs;
+	plugin->processReplacing(plugin, pluginOutputsStartPtr, pluginOutputsStartPtr, numFrames);
+
+	/////////re-interleaver////////
+	int j = 0;
+	for (int samp = 0; samp < numFrames * numChannels; samp += numChannels)
+	{
+		audioThrough[samp] = pluginOutputs[0][j];
+		if (numChannels == 2)
+		{
+			if (pluginNumOutputs == 2)
+			{
+				audioThrough[samp + 1] = pluginOutputs[1][j];
+			}
+			else if (pluginNumOutputs == 1)
+			{
+				//add plugin left output to right channel
+				audioThrough[samp + 1] = pluginOutputs[0][j];
+			}
+		}
+		else if (numChannels == 1 && pluginNumOutputs == 2)
+		{
+			//if mono out but plugin is stereo output, sum then half gain
+			audioThrough[samp] = pluginOutputs[0][j] * 0.5f + pluginOutputs[1][j] * 0.5f;
+		}
+		j++;
+	}
+	return audioThrough;
 }
 
 void VSTi::initializeIO() {

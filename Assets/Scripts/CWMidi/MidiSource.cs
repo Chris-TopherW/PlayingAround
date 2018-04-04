@@ -17,12 +17,13 @@ public class MidiSource : MonoBehaviour {
 
     public bool Mute;
     public bool PlayOnAwake;
-    public bool Loop;
+    //public bool Loop;
     public bool ForceToChannel;
     public int Channel = 1;
 
     [HideInInspector]
     public double startTimeOffset = 0.0;
+    private double initialOffset = 0.0;
 
     public float volume;
 
@@ -40,6 +41,7 @@ public class MidiSource : MonoBehaviour {
 
     private void Awake()
     {
+        MidiClip = GetComponent<MidiFileScript>().MidiClip;
         midiFile = new cwMidi.MidiFile(MidiClip);
         midiTrack = new MidiTrack();
         if (Midi.debugLevel > 3) midiFile.printCookedMidiFile();
@@ -53,24 +55,28 @@ public class MidiSource : MonoBehaviour {
         }
         if (PlayOnAwake) Play();
 
+        initialOffset = AudioSettings.dspTime * 1000;
         //Debug.Log("Current midi output = " + getMidiOutStr());
     }
 
     private void Play()
     {
         startTimeOffset = AudioSettings.dspTime * 1000;
-        MidiPlayer.PlayTrack(midiFile.getMidiTrack(1), this);
+        for(int i = 0; i < midiFile.getNumTracks(); i++)
+        {
+            MidiPlayer.PlayTrack(midiFile.getMidiTrack(i), this);
+        }
         MidiPlayer.reorderQueue();
     }
 
     private void Update()
     {
-        if(Loop)
-        if (AudioSettings.dspTime * 1000 > startTimeOffset + Metronome.ppqToMs(midiFile.getMidiTrack(1).getTrackPPQLen()))
-        {
-            startTimeOffset += Metronome.ppqToMs(midiFile.getMidiTrack(1).getTrackPPQLen());
-            Play();
-        }
+        //if(Loop)
+        //if (AudioSettings.dspTime * 1000  > startTimeOffset + Metronome.ppqToMs(midiFile.getMidiTrack(1).getTrackPPQLen()))
+        //{
+        //    startTimeOffset += Metronome.ppqToMs(midiFile.getMidiTrack(1).getTrackPPQLen());
+        //    Play();
+        //}
     }
 
     public long getTrackPPQAbsolutePos()
@@ -82,11 +88,6 @@ public class MidiSource : MonoBehaviour {
     {
         trackPPQAbsolutePos = p_pos;
     }
-
-    //public string getMidiOutStr()
-    //{
-    //    return editor.midiOutputChoices[MidiPlayer.getMidiOutIndex()];
-    //}
 }
 
 #if UNITY_EDITOR
@@ -97,14 +98,9 @@ public class MidiSource : MonoBehaviour {
 [CanEditMultipleObjects]
 public class MyPlayerEditor : Editor
 {
-    //SerializedProperty midiInputProp;
-    //string[] midiInputChoices = new[] { "Up", "Down", "Left", "Blah" };
-    //int midiInputIndex = 0;
 
     SerializedProperty midiOutputProp;
     public string[] midiOutputChoices = new[] { "Internal midi", "Port Midi" };
-
-    //public int midiOutputIndex = 0;
 
     MidiSource script;
 
@@ -128,12 +124,6 @@ public class MyPlayerEditor : Editor
     {
         serializedObject.Update();
 
-        //int midiOutputIndex = MidiPlayer.getMidiOutIndex();
-
-        //midiInputIndex = EditorGUILayout.Popup("Midi Input", midiInputIndex, midiInputChoices);
-        //if (midiInputIndex < 0)
-        //    midiInputIndex = 0;
-        //midiInputProp.stringValue = midiInputChoices[midiInputIndex];
         int midiOutputIndex = MidiPlayer.getMidiOutIndex();
 
         MidiPlayer.setMidiOutIndex(EditorGUILayout.Popup("Midi Output", midiOutputIndex, midiOutputChoices));
@@ -143,7 +133,7 @@ public class MyPlayerEditor : Editor
 
         script.Mute = EditorGUILayout.Toggle("Mute", script.Mute);
         script.PlayOnAwake = EditorGUILayout.Toggle("PlayOnAwake", script.PlayOnAwake);
-        script.Loop = EditorGUILayout.Toggle("Loop", script.Loop);
+        //script.Loop = EditorGUILayout.Toggle("Loop", script.Loop);
         script.ForceToChannel = EditorGUILayout.Toggle("ForceToChannel", script.ForceToChannel);
         script.Channel = EditorGUILayout.IntField("Channel", script.Channel);
         script.volume = EditorGUILayout.Slider("Volume", script.volume, 0.0f, 1.0f);

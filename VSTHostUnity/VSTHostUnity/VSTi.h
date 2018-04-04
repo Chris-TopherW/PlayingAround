@@ -18,4 +18,5 @@ private:
 	VstEvent eventHolder;
 	VstEvents* multEventsHolder;
 	void setNumInOut();
+	float audioThrough[2048];
 };

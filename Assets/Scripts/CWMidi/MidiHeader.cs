@@ -12,10 +12,16 @@ namespace cwMidi
         private ushort bpm = 0;
         private ushort midiType = 0;
         private ushort numTracks = 0;
+        public bool headerIsOK = false;
 
         public MidiHeader(int p_midiType, int p_numTracks, int p_bpm)
         {
-            if (p_midiType >= 2 || p_numTracks >= 128) return; //should put a run time debug build error here
+            if (p_midiType >= 2 || p_numTracks >= 128)
+            {
+                Debug.Log("Error: only accepts type 0 midi files");
+                headerIsOK = false;
+                return; 
+            }
             byte[] MThd = { 0x4d, 0x54, 0x68, 0x64 };
             for (int i = 0; i < MThd.Length; i++)
                 headerFile[i] = MThd[i];
@@ -50,6 +56,7 @@ namespace cwMidi
                 for (int i = 0; i < 2; i++)
                     headerFile[i + MThd.Length + headerSize.Length + type.Length + tracks.Length] = trackBpm[i];
             }
+            headerIsOK = true;
         }
 
         public MidiHeader()
@@ -66,6 +73,7 @@ namespace cwMidi
             for (int i = 0; i < headerSize.Length; i++)
                 headerFile[i + MThd.Length] = headerSize[i];
             setBpm(120);
+            headerIsOK = true;
         }
 
         protected void replaceHeader(byte[] p_header)
@@ -76,7 +84,11 @@ namespace cwMidi
 
         public void setMidiType(int p_midiType)
         {
-            if (p_midiType > 1) return; //put error catch here
+            if (p_midiType > 1)
+            {
+                headerIsOK = false;
+                return; //put error catch here
+            }
             midiType = (ushort)p_midiType;
             headerFile[9] = (byte)midiType;
         }
