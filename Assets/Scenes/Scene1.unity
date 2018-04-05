@@ -120,6 +120,16 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 114385291016185782, guid: a9625fa68eb97d747a9849d1733fb16e,
+        type: 2}
+      propertyPath: parameters.Array.size
+      value: 19
+      objectReference: {fileID: 0}
+    - target: {fileID: 114385291016185782, guid: a9625fa68eb97d747a9849d1733fb16e,
+        type: 2}
+      propertyPath: paramNames.Array.size
+      value: 19
+      objectReference: {fileID: 0}
     - target: {fileID: 4380104678735626, guid: a9625fa68eb97d747a9849d1733fb16e, type: 2}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -159,7 +169,187 @@ Prefab:
     - target: {fileID: 114385291016185782, guid: a9625fa68eb97d747a9849d1733fb16e,
         type: 2}
       propertyPath: pluginPath
-      value: C:\\Users\\chriswratt\\Documents\\UnityProjects\\UnityMidiLib\\VSTHostUnity\\VSTHostUnity\\TAL-Reverb-2.dll
+      value: C:\Program Files\Steinberg\VSTPlugins\reagate-standalone.dll
+      objectReference: {fileID: 0}
+    - target: {fileID: 114385291016185782, guid: a9625fa68eb97d747a9849d1733fb16e,
+        type: 2}
+      propertyPath: numParams
+      value: 19
+      objectReference: {fileID: 0}
+    - target: {fileID: 114385291016185782, guid: a9625fa68eb97d747a9849d1733fb16e,
+        type: 2}
+      propertyPath: parameters.Array.data[0]
+      value: 0.000000031622776
+      objectReference: {fileID: 0}
+    - target: {fileID: 114385291016185782, guid: a9625fa68eb97d747a9849d1733fb16e,
+        type: 2}
+      propertyPath: parameters.Array.data[1]
+      value: 0.006
+      objectReference: {fileID: 0}
+    - target: {fileID: 114385291016185782, guid: a9625fa68eb97d747a9849d1733fb16e,
+        type: 2}
+      propertyPath: parameters.Array.data[2]
+      value: 0.02
+      objectReference: {fileID: 0}
+    - target: {fileID: 114385291016185782, guid: a9625fa68eb97d747a9849d1733fb16e,
+        type: 2}
+      propertyPath: parameters.Array.data[3]
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114385291016185782, guid: a9625fa68eb97d747a9849d1733fb16e,
+        type: 2}
+      propertyPath: parameters.Array.data[4]
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114385291016185782, guid: a9625fa68eb97d747a9849d1733fb16e,
+        type: 2}
+      propertyPath: parameters.Array.data[5]
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114385291016185782, guid: a9625fa68eb97d747a9849d1733fb16e,
+        type: 2}
+      propertyPath: parameters.Array.data[6]
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114385291016185782, guid: a9625fa68eb97d747a9849d1733fb16e,
+        type: 2}
+      propertyPath: parameters.Array.data[7]
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114385291016185782, guid: a9625fa68eb97d747a9849d1733fb16e,
+        type: 2}
+      propertyPath: parameters.Array.data[8]
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114385291016185782, guid: a9625fa68eb97d747a9849d1733fb16e,
+        type: 2}
+      propertyPath: parameters.Array.data[9]
+      value: 0.000000031622776
+      objectReference: {fileID: 0}
+    - target: {fileID: 114385291016185782, guid: a9625fa68eb97d747a9849d1733fb16e,
+        type: 2}
+      propertyPath: parameters.Array.data[10]
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114385291016185782, guid: a9625fa68eb97d747a9849d1733fb16e,
+        type: 2}
+      propertyPath: parameters.Array.data[11]
+      value: 0.000000031622776
+      objectReference: {fileID: 0}
+    - target: {fileID: 114385291016185782, guid: a9625fa68eb97d747a9849d1733fb16e,
+        type: 2}
+      propertyPath: paramNames.Array.data[0]
+      value: Thresh
+      objectReference: {fileID: 0}
+    - target: {fileID: 114385291016185782, guid: a9625fa68eb97d747a9849d1733fb16e,
+        type: 2}
+      propertyPath: paramNames.Array.data[1]
+      value: Attack
+      objectReference: {fileID: 0}
+    - target: {fileID: 114385291016185782, guid: a9625fa68eb97d747a9849d1733fb16e,
+        type: 2}
+      propertyPath: paramNames.Array.data[2]
+      value: Release
+      objectReference: {fileID: 0}
+    - target: {fileID: 114385291016185782, guid: a9625fa68eb97d747a9849d1733fb16e,
+        type: 2}
+      propertyPath: paramNames.Array.data[3]
+      value: Pre-open
+      objectReference: {fileID: 0}
+    - target: {fileID: 114385291016185782, guid: a9625fa68eb97d747a9849d1733fb16e,
+        type: 2}
+      propertyPath: paramNames.Array.data[4]
+      value: Hold
+      objectReference: {fileID: 0}
+    - target: {fileID: 114385291016185782, guid: a9625fa68eb97d747a9849d1733fb16e,
+        type: 2}
+      propertyPath: paramNames.Array.data[5]
+      value: Lowpass
+      objectReference: {fileID: 0}
+    - target: {fileID: 114385291016185782, guid: a9625fa68eb97d747a9849d1733fb16e,
+        type: 2}
+      propertyPath: paramNames.Array.data[6]
+      value: Hipass
+      objectReference: {fileID: 0}
+    - target: {fileID: 114385291016185782, guid: a9625fa68eb97d747a9849d1733fb16e,
+        type: 2}
+      propertyPath: paramNames.Array.data[7]
+      value: SignIn
+      objectReference: {fileID: 0}
+    - target: {fileID: 114385291016185782, guid: a9625fa68eb97d747a9849d1733fb16e,
+        type: 2}
+      propertyPath: paramNames.Array.data[8]
+      value: AudIn
+      objectReference: {fileID: 0}
+    - target: {fileID: 114385291016185782, guid: a9625fa68eb97d747a9849d1733fb16e,
+        type: 2}
+      propertyPath: paramNames.Array.data[9]
+      value: Dry
+      objectReference: {fileID: 0}
+    - target: {fileID: 114385291016185782, guid: a9625fa68eb97d747a9849d1733fb16e,
+        type: 2}
+      propertyPath: paramNames.Array.data[10]
+      value: Wet
+      objectReference: {fileID: 0}
+    - target: {fileID: 114385291016185782, guid: a9625fa68eb97d747a9849d1733fb16e,
+        type: 2}
+      propertyPath: paramNames.Array.data[11]
+      value: Noise
+      objectReference: {fileID: 0}
+    - target: {fileID: 114385291016185782, guid: a9625fa68eb97d747a9849d1733fb16e,
+        type: 2}
+      propertyPath: sumOutputToMono
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114385291016185782, guid: a9625fa68eb97d747a9849d1733fb16e,
+        type: 2}
+      propertyPath: parameters.Array.data[12]
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114385291016185782, guid: a9625fa68eb97d747a9849d1733fb16e,
+        type: 2}
+      propertyPath: parameters.Array.data[16]
+      value: 0.54330707
+      objectReference: {fileID: 0}
+    - target: {fileID: 114385291016185782, guid: a9625fa68eb97d747a9849d1733fb16e,
+        type: 2}
+      propertyPath: paramNames.Array.data[12]
+      value: Hystrsis
+      objectReference: {fileID: 0}
+    - target: {fileID: 114385291016185782, guid: a9625fa68eb97d747a9849d1733fb16e,
+        type: 2}
+      propertyPath: paramNames.Array.data[13]
+      value: PreviewF
+      objectReference: {fileID: 0}
+    - target: {fileID: 114385291016185782, guid: a9625fa68eb97d747a9849d1733fb16e,
+        type: 2}
+      propertyPath: paramNames.Array.data[14]
+      value: RMS size
+      objectReference: {fileID: 0}
+    - target: {fileID: 114385291016185782, guid: a9625fa68eb97d747a9849d1733fb16e,
+        type: 2}
+      propertyPath: paramNames.Array.data[15]
+      value: Usemidi
+      objectReference: {fileID: 0}
+    - target: {fileID: 114385291016185782, guid: a9625fa68eb97d747a9849d1733fb16e,
+        type: 2}
+      propertyPath: paramNames.Array.data[16]
+      value: MidiNote
+      objectReference: {fileID: 0}
+    - target: {fileID: 114385291016185782, guid: a9625fa68eb97d747a9849d1733fb16e,
+        type: 2}
+      propertyPath: paramNames.Array.data[17]
+      value: MidiChan
+      objectReference: {fileID: 0}
+    - target: {fileID: 114385291016185782, guid: a9625fa68eb97d747a9849d1733fb16e,
+        type: 2}
+      propertyPath: paramNames.Array.data[18]
+      value: InvrtWet
+      objectReference: {fileID: 0}
+    - target: {fileID: 114385291016185782, guid: a9625fa68eb97d747a9849d1733fb16e,
+        type: 2}
+      propertyPath: MonoOutput
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: a9625fa68eb97d747a9849d1733fb16e, type: 2}

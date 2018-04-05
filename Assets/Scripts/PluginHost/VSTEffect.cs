@@ -11,6 +11,7 @@ namespace pluginHost
         // public string pluginPath = "D:\\UnityProjects\\usingExternalCpp\\VSTHostUnity\\VSTHostUnity\\TAL-Reverb-2.dll";
         public string pluginPath = "C:\\Users\\chriswratt\\Documents\\UnityProjects\\UnityMidiLib\\VSTHostUnity\\VSTHostUnity\\TAL-Reverb-2.dll";
         private int thisVSTIndex = 0;
+        public bool MonoOutput = false;
         //[Space]
 
         //[Header("Midi")]
@@ -51,7 +52,7 @@ namespace pluginHost
             thisVSTIndex = loadEffect(pluginPath);
             if(thisVSTIndex == -1)
             {
-                Debug.Log("Error, VST has failed to load. Unsupported file path");
+                Debug.Log("Error, VST has failed to load. Unsupported file path or format");
                 pluginFailedToLoad = true;
                 return;
             }
@@ -88,6 +89,13 @@ namespace pluginHost
             Marshal.Copy(data, 0, inputArrayAsVoidPtr, pluggoHost.blockSize * channels);
             IntPtr outputVoidPtr = HostDllCpp.processFxAudio(thisVSTIndex, inputArrayAsVoidPtr, pluggoHost.blockSize, channels);
             Marshal.Copy(outputVoidPtr, data, 0, pluggoHost.blockSize * channels);
+            if(MonoOutput && channels == 2)
+            {
+                for(int i = 0; i < data.Length; i+= 2)
+                {
+                    data[i + 1] = data[i];
+                }
+            }
         }
 
         void setupIO()
@@ -104,6 +112,8 @@ namespace pluginHost
             if (HostDllCpp.getNumPluginInputs(thisVSTIndex) != HostDllCpp.getNumPluginOutputs(thisVSTIndex))
             {
                 Debug.Log("Warning, plugin inputs does not equal plugin outputs");
+                Debug.Log("Num plugin ins = " + HostDllCpp.getNumPluginInputs(thisVSTIndex));
+                Debug.Log("Num plugin outs = " + HostDllCpp.getNumPluginOutputs(thisVSTIndex));
             }
         }
 
