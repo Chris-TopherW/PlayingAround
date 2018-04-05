@@ -8,13 +8,13 @@ namespace pluginHost
     public class VSTEffect : MonoBehaviour
     {
         //important stuff 
-        public string pluginPath;
+        public string pluginPath = "D:\\UnityProjects\\usingExternalCpp\\VSTHostUnity\\VSTHostUnity\\TAL-Reverb-2.dll";
         private int thisVSTIndex = 0;
-        [Space]
+        //[Space]
 
-        [Header("Midi")]
-        public bool midiInput = false;
-        public int midiChannel = 1;
+        //[Header("Midi")]
+        //public bool midiInput = false;
+        //public int midiChannel = 1;
 
         [Space]
 
@@ -45,7 +45,6 @@ namespace pluginHost
                 return;
 
             //pluginPath = "C:\\Users\\chriswratt\\Documents\\UnityProjects\\UnityMidiLib\\VSTHostUnity\\VSTHostUnity\\TAL-Reverb-2.dll";
-            pluginPath = "D:\\UnityProjects\\usingExternalCpp\\VSTHostUnity\\VSTHostUnity\\TAL-Reverb-2.dll";
             //pluginPath = "D:\\UnityProjects\\usingExternalCpp\\VSTHostUnity\\VSTHostUnity\\TAL-NoiseMaker-64.dll";
 
             thisVSTIndex = loadEffect(pluginPath);
@@ -137,6 +136,7 @@ namespace pluginHost
 
         public void OnApplicationQuit()
         {
+            if (pluginFailedToLoad) return;
             Marshal.FreeHGlobal(inputArrayAsVoidPtr);
             Marshal.FreeHGlobal(messageAsVoidPtr);
             ready = false;

@@ -15,6 +15,6 @@ private:
 	std::vector<std::vector<float>> pluginInputs;
 	std::vector<std::vector<float>> pluginOutputs;
 	std::string pluginPath;
-	float** pluginInputsStartPtr;
-	float** pluginOutputsStartPtr;
+	float** pluginInputsStartPtr = nullptr;
+	float** pluginOutputsStartPtr = nullptr;
 };

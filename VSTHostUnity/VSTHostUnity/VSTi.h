@@ -14,7 +14,7 @@ public:
 private:
 	std::vector<std::vector<float>> pluginOutputs;
 	std::string pluginPath;
-	float** pluginOutputsStartPtr;
+	float** pluginOutputsStartPtr = nullptr;
 	VstEvent eventHolder;
 	VstEvents* multEventsHolder;
 	void setNumInOut();

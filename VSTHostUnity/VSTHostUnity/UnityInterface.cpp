@@ -45,11 +45,9 @@ int loadEffect(const char* path)
 {
 	if (hostInitialised)
 	{
-		//char * testPath = "C:\\Users\\chriswratt\\Documents\\UnityProjects\\UnityMidiLib\\VSTHostUnity\\VSTHostUnity\\TAL-Reverb-2.dll";
 		std::string effectLocation(path);
 		Debug::Log("Effect location is: ");
 		Debug::Log(effectLocation);
-		//std::string effectLocation(testPath);
 		int effectIndex = vstHost->loadEffect(effectLocation);
 		//error catcher
 		if (vstHost->getEffect(effectIndex)->getPluginReady() != true) return -1;
@@ -67,7 +65,6 @@ int loadInstrument(const char* path)
 {
 	if (hostInitialised)
 	{
-		//const char * testPath = "C:\\Users\\chriswratt\\Documents\\UnityProjects\\UnityMidiLib\\VSTHostUnity\\VSTHostUnity\\TAL-Reverb-2.dll";
 		std::string effectLocation(path);
 		int instIndex = vstHost->loadInstrument(effectLocation);
 		//error catcher

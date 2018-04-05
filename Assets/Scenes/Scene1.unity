@@ -156,6 +156,11 @@ Prefab:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 114385291016185782, guid: a9625fa68eb97d747a9849d1733fb16e,
+        type: 2}
+      propertyPath: pluginPath
+      value: D:\UnityProjects\usingExternalCpp\VSTHostUnity\VSTHostUnity\SpaceshipDelay.dll
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: a9625fa68eb97d747a9849d1733fb16e, type: 2}
   m_IsPrefabParent: 0

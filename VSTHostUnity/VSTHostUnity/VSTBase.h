@@ -31,7 +31,7 @@ public:
 
 protected:
 
-	AEffect* plugin = NULL;
+	AEffect* plugin = nullptr;
 	void silenceChannel(std::vector<std::vector<float>> channelData);
 	void startPlugin();
 	void resumePlugin();
