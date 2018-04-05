@@ -54,6 +54,8 @@ std::shared_ptr<VSTi> VstHost::getInstrument(int index)
 
 void VstHost::clearVSTs()
 {
-	audioEffects.clear();
-	instruments.clear();
+	if(audioEffects.size() > 0)
+		audioEffects.clear();
+	if(instruments.size() > 0)
+		instruments.clear();
 }

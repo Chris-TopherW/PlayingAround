@@ -15,23 +15,23 @@ VSTEffect::~VSTEffect()
 {
 	plugin->dispatcher(plugin, effMainsChanged, 0, 0, NULL, 0.0f);
 
-	if (pluginInputsStartPtr != nullptr)
-	{
-		for (int i = 0; i < pluginInputs.size(); i++)
-		{
-			free(pluginInputsStartPtr[i]);
-		}
-		free(pluginInputsStartPtr);
-	}
-	
-	if (pluginOutputsStartPtr != nullptr)
-	{
-		for (int i = 0; i < pluginOutputs.size(); i++)
-		{
-			free(pluginOutputsStartPtr[i]);
-		}
-		free(pluginOutputsStartPtr);
-	}
+	//if (pluginInputsStartPtr != nullptr)
+	//{
+	//	for (int i = 0; i < pluginInputs.size(); i++)
+	//	{
+	//		free(pluginInputsStartPtr[i]);
+	//	}
+	//	free(pluginInputsStartPtr);
+	//}
+	//
+	//if (pluginOutputsStartPtr != nullptr)
+	//{
+	//	for (int i = 0; i < pluginOutputs.size(); i++)
+	//	{
+	//		free(pluginOutputsStartPtr[i]);
+	//	}
+	//	free(pluginOutputsStartPtr);
+	//}
 }
 
 float* VSTEffect::processAudio(float* audioThrough, long numFrames, int numChannels)

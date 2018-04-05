@@ -8,7 +8,8 @@ namespace pluginHost
     public class VSTEffect : MonoBehaviour
     {
         //important stuff 
-        public string pluginPath = "D:\\UnityProjects\\usingExternalCpp\\VSTHostUnity\\VSTHostUnity\\TAL-Reverb-2.dll";
+        // public string pluginPath = "D:\\UnityProjects\\usingExternalCpp\\VSTHostUnity\\VSTHostUnity\\TAL-Reverb-2.dll";
+        public string pluginPath = "C:\\Users\\chriswratt\\Documents\\UnityProjects\\UnityMidiLib\\VSTHostUnity\\VSTHostUnity\\TAL-Reverb-2.dll";
         private int thisVSTIndex = 0;
         //[Space]
 
@@ -108,6 +109,8 @@ namespace pluginHost
 
         void setupParams()
         {
+            if (pluginFailedToLoad) return;
+
             numParams = HostDllCpp.getNumParams(thisVSTIndex);
             parameters = new float[numParams];
             previousParams = new float[numParams];
@@ -122,12 +125,16 @@ namespace pluginHost
 
         public string getParameterName(int paramIndex)
         {
+            if (pluginFailedToLoad) return "";
+
             IntPtr p_paramName = HostDllCpp.getParamName(thisVSTIndex, paramIndex);
             return Marshal.PtrToStringAnsi(p_paramName);
         }
 
         public int loadEffect(string path)
         {
+            if (pluginFailedToLoad) return 0;
+
             IntPtr intPtr_aux = Marshal.StringToHGlobalAnsi(path);
             int effectIndex = HostDllCpp.loadEffect(intPtr_aux);
             Marshal.FreeHGlobal(intPtr_aux);
@@ -137,6 +144,7 @@ namespace pluginHost
         public void OnApplicationQuit()
         {
             if (pluginFailedToLoad) return;
+
             Marshal.FreeHGlobal(inputArrayAsVoidPtr);
             Marshal.FreeHGlobal(messageAsVoidPtr);
             ready = false;
