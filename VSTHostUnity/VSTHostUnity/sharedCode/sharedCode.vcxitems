@@ -14,30 +14,4 @@
   <ItemGroup>
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\DebugCPP.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\PluginHost.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\stdafx.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\targetver.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\VSTBase.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\VSTEffect.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\VSTi.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\PluginHost.cpp">
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\stdafx.cpp">
-      <PrecompiledHeader>Create</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\VSTBase.cpp">
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\VSTEffect.cpp">
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\VSTi.cpp">
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
-    </ClCompile>
-  </ItemGroup>
 </Project>

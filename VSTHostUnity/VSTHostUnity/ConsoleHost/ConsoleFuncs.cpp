@@ -45,26 +45,7 @@ int ConsoleHost::loadEffect(std::string& path)
 	}
 }
 
-int ConsoleHost::loadInstrument(std::string& path)
-{
-	if (hostInitialised)
-	{
-		return vstHost->loadInstrument(path);
-	}
-	else
-	{
-		cout << "Host not initialised, load instr failed" << endl;
-		return -1;
-	}
-
-}
-
 float* ConsoleHost::processFxAudio(int vstIndex, float* audioThrough, long numFrames, int numChannels)
 {
 	return vstHost->getEffect(vstIndex)->processAudio(audioThrough, numFrames, numChannels);
-}
-
-float* ConsoleHost::processInstAudio(int vstIndex, long numFrames, int numChannels)
-{
-	return vstHost->getInstrument(vstIndex)->processAudio(numFrames, numChannels);
 }

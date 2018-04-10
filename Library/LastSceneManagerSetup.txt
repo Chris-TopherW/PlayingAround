@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/Scenes/Scene1.unity
+- path: Assets/VSTHost/VSTPluginTest.unity
   isLoaded: 1
   isActive: 1

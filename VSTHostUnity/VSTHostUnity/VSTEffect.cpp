@@ -1,3 +1,16 @@
+//Copyright 2018 Chris Wratt and Victoria University of Wellington
+//This program is free software : you can redistribute it and/or modify
+//it under the terms of the GNU General Public License as published by
+//the Free Software Foundation, either version 3 of the License, or
+//(at your option) any later version.
+//
+//This program is distributed in the hope that it will be useful,
+//but WITHOUT ANY WARRANTY; without even the implied warranty of
+//MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.See the
+//GNU General Public License for more details.
+//
+// see <http://www.gnu.org/licenses/> for a full copy of the license.
+
 #include "VSTEffect.h"
 
 VSTEffect::VSTEffect(std::string& path, int p_samplerate, int p_blocksize) : VSTBase(path)
@@ -8,6 +21,10 @@ VSTEffect::VSTEffect(std::string& path, int p_samplerate, int p_blocksize) : VST
 	{
 		initializeIO();
 		startPlugin();
+		if (plugin->flags & effFlagsCanReplacing != effFlagsCanReplacing)
+		{
+			Debug::Log("Error: Plugin does not support audio input");
+		}
 	}
 }
 
@@ -34,17 +51,22 @@ VSTEffect::~VSTEffect()
 	//}
 }
 
-float* VSTEffect::processAudio(float* audioThrough, long numFrames, int numChannels)
+float* VSTEffect::processAudio(float* audioThrough, long numFrames, int numUnityChans)
 {
+	if (pluginNumInputs == 0)
+		return audioThrough;
+	if (plugin->flags & effFlagsCanReplacing != effFlagsCanReplacing)
+		return audioThrough;
+
 	silenceChannel(pluginInputs);
 	silenceChannel(pluginOutputs);
 	/////////de-interleaver////////
 
 	int j = 0;
-	for (int samp = 0; samp < numFrames * numChannels; samp += numChannels)
+	for (int samp = 0; samp < numFrames * numUnityChans; samp += numUnityChans)
 	{
 		pluginInputs[0][j] = audioThrough[samp];
-		if (numChannels == 2)
+		if (numUnityChans == 2)
 		{
 			if (pluginNumInputs == 2)
 			{
@@ -57,7 +79,7 @@ float* VSTEffect::processAudio(float* audioThrough, long numFrames, int numChann
 				pluginInputs[0][j] = audioThrough[samp] * 0.5f + audioThrough[samp + 1] * 0.5f;
 			}
 		}
-		else if (numChannels == 1 && pluginNumInputs == 2)
+		else if (numUnityChans == 1 && pluginNumInputs == 2)
 		{
 			//send mono input to each plugin channel
 			pluginInputs[1][j] = audioThrough[samp];
@@ -69,10 +91,10 @@ float* VSTEffect::processAudio(float* audioThrough, long numFrames, int numChann
 
 	/////////re-interleaver////////
 	j = 0;
-	for (int samp = 0; samp < numFrames * numChannels; samp += numChannels)
+	for (int samp = 0; samp < numFrames * numUnityChans; samp += numUnityChans)
 	{
 		audioThrough[samp] = pluginOutputs[0][j];
-		if (numChannels == 2)
+		if (numUnityChans == 2)
 		{
 			if (pluginNumOutputs == 2)
 			{
@@ -84,7 +106,7 @@ float* VSTEffect::processAudio(float* audioThrough, long numFrames, int numChann
 				audioThrough[samp + 1] = pluginOutputs[0][j];
 			}
 		}
-		else if (numChannels == 1 && pluginNumOutputs == 2)
+		else if (numUnityChans == 1 && pluginNumOutputs == 2)
 		{
 			//if mono out but plugin is stereo output, sum then half gain
 			audioThrough[samp] = pluginOutputs[0][j] * 0.5f + pluginOutputs[1][j] * 0.5f;

@@ -1,3 +1,16 @@
+//Copyright 2018 Chris Wratt and Victoria University of Wellington
+//This program is free software : you can redistribute it and/or modify
+//it under the terms of the GNU General Public License as published by
+//the Free Software Foundation, either version 3 of the License, or
+//(at your option) any later version.
+//
+//This program is distributed in the hope that it will be useful,
+//but WITHOUT ANY WARRANTY; without even the implied warranty of
+//MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.See the
+//GNU General Public License for more details.
+//
+// see <http://www.gnu.org/licenses/> for a full copy of the license.
+
 #include "VSTBase.h"
 
 VstBasicParams::VstBasicParams() :
@@ -52,7 +65,7 @@ int VSTBase::loadPlugin(std::string& path) {
 	}
 	else
 	{
-		Debug::Log("C: Failed trying to load VST", Color::Black);
+		Debug::Log("C: Failed trying to load VST");
 		plugin = NULL;
 		return 0;
 	}
@@ -80,7 +93,7 @@ int VSTBase::configurePluginCallbacks(/*AEffect *plugin*/) {
 			return 0;
 		}
 		if (plugin->magic != kEffectMagic) {
-			Debug::Log("C: Plugin's magic number is bad\n", Color::Black);
+			Debug::Log("C: Plugin's magic number is bad\n");
 			return -1;
 		}
 
@@ -88,7 +101,7 @@ int VSTBase::configurePluginCallbacks(/*AEffect *plugin*/) {
 		dispatcherFuncPtr dispatcher = (dispatcherFuncPtr)(plugin->dispatcher);
 		if (dispatcher == NULL)
 		{
-			Debug::Log("C: dispatcher is NULL\n", Color::Black);
+			Debug::Log("C: dispatcher is NULL\n");
 			return -1;
 		}
 

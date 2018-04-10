@@ -1,3 +1,16 @@
+//Copyright 2018 Chris Wratt and Victoria University of Wellington
+//This program is free software : you can redistribute it and/or modify
+//it under the terms of the GNU General Public License as published by
+//the Free Software Foundation, either version 3 of the License, or
+//(at your option) any later version.
+//
+//This program is distributed in the hope that it will be useful,
+//but WITHOUT ANY WARRANTY; without even the implied warranty of
+//MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.See the
+//GNU General Public License for more details.
+//
+// see <http://www.gnu.org/licenses/> for a full copy of the license.
+
 #include "UnityInterface.h"
 
 void initHost()
@@ -61,33 +74,10 @@ int loadEffect(const char* path)
 	}
 }
 
-int loadInstrument(const char* path)
-{
-	if (hostInitialised)
-	{
-		std::string effectLocation(path);
-		int instIndex = vstHost->loadInstrument(effectLocation);
-		//error catcher
-		if (vstHost->getInstrument(instIndex)->getPluginReady() != true) return -1;
-
-		return instIndex;
-	}
-	else
-	{
-		Debug::Log("Host not initialised, load instr failed");
-		return -1;
-	}
-}
-
 float* processFxAudio(int vstIndex, float* audioThrough, long numFrames, int numChannels)
 {
 	//return audioThrough;
 	return vstHost->getEffect(vstIndex)->processAudio(audioThrough, numFrames, numChannels);
-}
-
-float* processInstAudio(int vstIndex, long numFrames, int numChannels)
-{
-	return vstHost->getInstrument(vstIndex)->processAudio(numFrames, numChannels);
 }
 
 int getNumPluginInputs(int vstIndex)

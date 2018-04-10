@@ -8,20 +8,4 @@
       <UniqueIdentifier>{13025872-f90d-468f-b4dc-1b315680018d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\DebugCPP.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\PluginHost.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\stdafx.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\targetver.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\VSTBase.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\VSTEffect.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\VSTi.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\PluginHost.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\stdafx.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\VSTBase.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\VSTEffect.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\VSTi.cpp" />
-  </ItemGroup>
 </Project>

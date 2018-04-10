@@ -1,16 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 using System;
-
-//this talks directly to C DLL. For some reason it slows things down on build a lot...
 
 namespace cwMidi
 {
     public static class PortMidi
     {
-
         [DllImport("portmidi", EntryPoint = "Pm_Initialize")]
         public static extern int Pm_Initialize();
 
@@ -34,7 +28,6 @@ namespace cwMidi
 
         [DllImport("portmidi", EntryPoint = "shutdown")]
         public static extern void shutdown();
-
 
         public static string getDeviceName(int index)
         {
