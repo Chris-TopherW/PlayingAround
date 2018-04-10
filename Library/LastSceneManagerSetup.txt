@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/VSTHost/VSTPluginTest.unity
+- path: Assets/MidiPlayer/MidiTest.unity
   isLoaded: 1
   isActive: 1
